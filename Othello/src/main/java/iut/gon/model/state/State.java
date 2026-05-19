@@ -1,8 +1,8 @@
 package iut.gon.model.state;
 
-import iut.gon.hexcoordinate.Coordinate;
-import iut.gon.hexcoordinate.Direction;
-import iut.gon.hexcoordinate.Mode;
+import iut.gon.HexagonalCoordinates.Coordinate;
+import iut.gon.HexagonalCoordinates.Direction;
+import iut.gon.HexagonalCoordinates.Mode;
 import iut.gon.model.Team;
 import iut.gon.model.actions.Move;
 import iut.gon.model.actions.RemoveLine;

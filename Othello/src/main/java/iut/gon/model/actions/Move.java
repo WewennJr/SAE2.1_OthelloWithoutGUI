@@ -1,6 +1,6 @@
 package iut.gon.model.actions;
 
-import iut.gon.hexcoordinate.Coordinate;
+import iut.gon.HexagonalCoordinates.Coordinate;
 
 public class Move extends Action {
 

@@ -1,6 +1,6 @@
 package iut.gon.model.actions;
 
-import iut.gon.hexcoordinate.Coordinate;
+import iut.gon.HexagonalCoordinates.Coordinate;
 
 import java.util.Set;
 

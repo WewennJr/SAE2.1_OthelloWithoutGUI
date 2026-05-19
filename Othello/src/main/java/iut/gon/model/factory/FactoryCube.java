@@ -1,8 +1,8 @@
 package iut.gon.model.factory;
 
-import iut.gon.hexcoordinate.Coordinate;
-import iut.gon.hexcoordinate.CoordinateCube;
-import iut.gon.hexcoordinate.Mode;
+import iut.gon.HexagonalCoordinates.Coordinate;
+import iut.gon.HexagonalCoordinates.CoordinateCube;
+import iut.gon.HexagonalCoordinates.Mode;
 import iut.gon.model.Team;
 import iut.gon.model.state.IState;
 import iut.gon.model.state.State;
