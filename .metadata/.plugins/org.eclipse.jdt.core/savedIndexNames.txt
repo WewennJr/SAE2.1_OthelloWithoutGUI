@@ -1,3 +1,0 @@
-INDEX VERSION 1.134+C:\Users\panda\Documents\Unicaen\1A.2\Semestre 2\SAE\SAE_2.1\groupe13-le-fh-ba-gw\.metadata\.plugins\org.eclipse.jdt.core
-2995018.index
-1865797976.index
