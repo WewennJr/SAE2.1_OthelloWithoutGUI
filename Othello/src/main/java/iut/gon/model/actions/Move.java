@@ -1,11 +1,13 @@
 package iut.gon.model.actions;
 
-public class Move {
+import iut.gon.hexcoordinate.Coordinate;
+
+public class Move extends Action {
 
     public Coordinate from;
     public Coordinate to;
 
-    public Move(Coordinate from, Coordinate to){
+    public Move(Coordinate from, Coordinate to) {
         this.from = from;
         this.to = to;
     }
@@ -15,7 +17,6 @@ public class Move {
     }
 
     public void setFrom(Coordinate from) {
-
         this.from = from;
     }
 
@@ -26,36 +27,4 @@ public class Move {
     public void setTo(Coordinate to) {
         this.to = to;
     }
-
-    public void doMove() throws IllegalArgumentException, IndexOutOfBoundsException, RuntimeException
-        if (from.getRing() == null) {
-            throw new IllegalArgumentException("Pas d'anneau à la position de départ");
-        }if (to.getCoordinate() == null){
-            throw new IndeOutOfBoundsException("La coordonné donné est hors terrain");
-        }if (from.getCoordinate() == )
-    }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 package iut.gon.model;
 
-import java.awt.*;
+import java.awt.Color;
 
 public enum Team {
 
@@ -16,5 +16,4 @@ public enum Team {
     public void setColor(Color color) {
         this.color = color;
     }
-
 }

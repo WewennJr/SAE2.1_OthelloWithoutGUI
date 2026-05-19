@@ -1,11 +1,15 @@
 package iut.gon.model.actions;
 
-public class RemoveLine {
+import iut.gon.hexcoordinate.Coordinate;
+
+import java.util.Set;
+
+public class RemoveLine extends Action {
 
     public Set<Coordinate> line;
     public Coordinate ring;
 
-    public Removeline(Set<Coordinate> line, Coordinate ring){
+    public RemoveLine(Set<Coordinate> line, Coordinate ring) {
         this.line = line;
         this.ring = ring;
     }

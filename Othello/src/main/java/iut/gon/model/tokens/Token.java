@@ -1,10 +1,12 @@
 package iut.gon.model.tokens;
 
+import iut.gon.model.Team;
+
 public abstract class Token {
 
     public Team team;
 
-    public Token(Team team){
+    public Token(Team team) {
         this.team = team;
     }
 
@@ -16,12 +18,7 @@ public abstract class Token {
         this.team = team;
     }
 
-    public String charRepr(){
-        return null;
-    }
+    public abstract String charRepr();
 
-    public Token clone(){
-        return null;
-    }
-
+    public abstract Token clone();
 }
