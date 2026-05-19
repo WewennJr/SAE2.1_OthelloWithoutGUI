@@ -54,7 +54,7 @@ public class State implements IState {
     }
 
     public boolean isInField(Coordinate c) {
-        return
+        return false;
     }
 
     public Team winner() {
