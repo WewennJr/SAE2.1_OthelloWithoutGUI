@@ -1,6 +1,7 @@
 package iut.gon.model;
 
 import iut.gon.model.state.IState;
+import iut.gon.model.tokens.Token;
 
 public class Model {
     private IState currentState;
