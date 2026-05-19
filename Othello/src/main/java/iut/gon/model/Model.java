@@ -1,6 +1,6 @@
 package iut.gon.model;
 
-import iut.gon.HexagonalCoordinates.Coordinate;
+import iut.gon.Coordinate.Coordinate;
 import iut.gon.model.actions.Move;
 import iut.gon.model.actions.RemoveLine;
 import iut.gon.model.state.IState;

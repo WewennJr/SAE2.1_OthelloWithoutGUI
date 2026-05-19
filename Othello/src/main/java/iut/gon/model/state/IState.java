@@ -1,6 +1,6 @@
 package iut.gon.model.state;
 
-import iut.gon.HexagonalCoordinates.Coordinate;
+import iut.gon.Coordinate.Coordinate;
 import iut.gon.model.Team;
 import iut.gon.model.actions.Move;
 import iut.gon.model.actions.RemoveLine;
@@ -23,8 +23,8 @@ public interface IState {
 
     /**
      * Supprime une ligne de 5 pions et un anneau, retourne le nouvel état.
-     * @throws RuntimeException si la ligne fournie est invalide (taille != 5, n'existe pas, pions pas de la même équipe...)
-     *         ou si aucune ligne n'est présente sur le plateau.
+     * @throws RuntimeException si la ligne fournie est invalide (taille != 5, n'existe pas,
+     *         pions pas de la même équipe...) ou si aucune ligne n'est présente sur le plateau.
      */
     IState removeLine(RemoveLine removeLine);
 
@@ -65,7 +65,7 @@ public interface IState {
     List<Set<Coordinate>> getPawnsLines(Map<Coordinate, Token> board);
 
     /**
-     * Supprime le token à la coordonnée donnée et retourne le nouvel état.
+     * Supprime le token à la coordonnée donnée (case redevient vide) et retourne le nouvel état.
      */
     IState removeToken(Coordinate c);
 
