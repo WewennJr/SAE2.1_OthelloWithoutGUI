@@ -76,7 +76,8 @@ public class CoordinateDoubled extends Coordinate{
 		if (!isHorizontal && !isVertical && !isDiagonal) {
 			throw new DifferentAxisException("Les coordonnées ne sont pas sur le même axe = problème");
 		}
-		
+		/*On initialise la taille des pas en fonction de si c'est Horizontale
+		,Vertical ou Diagonal*/
 		int stepY = 0;
 		int stepX = 0;
 		
@@ -105,6 +106,7 @@ public class CoordinateDoubled extends Coordinate{
 			}
 		}
 		
+		//on initialise la liste des coordonnés entre les 2 coordonnées
 		List<Coordinate> path = new ArrayList<>();
 		int currentY = this.y + stepY;
 		int currentX = this.x + stepX;
@@ -134,7 +136,7 @@ public class CoordinateDoubled extends Coordinate{
 			return new CoordinateDoubled(this.y,this.x+2);
 		}
 		else {
-			throw new InvalidParameterException("invalide en mode FLAT");
+			throw new InvalidParameterException("La direction EST n'existe pas en mode FLAT");
 		}
 	}
 
@@ -154,7 +156,7 @@ public class CoordinateDoubled extends Coordinate{
 			return new CoordinateDoubled(this.y,this.x-2);
 		}
 		else {
-			throw new InvalidParameterException("invalide en mode FLAT");
+			throw new InvalidParameterException("La direction OUEST n'existe pas en mode FLAT");
 		}
 	}
 
@@ -164,7 +166,7 @@ public class CoordinateDoubled extends Coordinate{
 			return new CoordinateDoubled(this.y+2,this.x);
 		}
 		else {
-			throw new InvalidParameterException("invalide en Mode POINTY");
+			throw new InvalidParameterException("La direction SUD n'existe pas en Mode POINTY");
 		}
 	}
 
@@ -174,7 +176,7 @@ public class CoordinateDoubled extends Coordinate{
 			return new CoordinateDoubled(this.y-2,this.x);
 		}
 		else {
-			throw new InvalidParameterException("invalide en Mode POINTY");
+			throw new InvalidParameterException("La direciton NORD n'existe pas en Mode POINTY");
 		}
 	}
 	
