@@ -106,7 +106,12 @@ public class State implements IState {
         boolean currentHasLine = newLines.stream().anyMatch(line -> line.stream().anyMatch(c -> newBoard.get(c) != null && newBoard.get(c).getTeam() == turn));
         if (!newLines.isEmpty() && !currentHasLine) {
             // Seule l'équipe adverse a une ligne : on lui passe le tour
-            nextTurn = (turn == Team.BLACK) ? Team.WHITE : Team.BLACK;
+            if (turn == Team.BLACK) {
+                nextTurn = Team.WHITE;
+            }
+            else {
+                nextTurn = Team.BLACK;
+            }
         }
 
         return new State(newBoard, nextTurn, removedRings, mode);
@@ -174,14 +179,22 @@ public class State implements IState {
         Team nextTurn = turn;
         if (remainingLines.isEmpty()) {
             // Plus de lignes : on passe au joueur suivant
-            nextTurn = (turn == Team.BLACK) ? Team.WHITE : Team.BLACK;
+            if (turn == Team.BLACK) {
+                nextTurn = Team.WHITE;
+            }
+            else {
+                nextTurn = Team.BLACK;
+            }
         } else {
             // Il peut rester des lignes pour les deux équipes
-            boolean currentStillHasLine = remainingLines.stream()
-                    .anyMatch(l -> l.stream()
-                            .anyMatch(c -> newBoard.get(c) != null && newBoard.get(c).getTeam() == turn));
+            boolean currentStillHasLine = remainingLines.stream().anyMatch(l -> l.stream().anyMatch(c -> newBoard.get(c) != null && newBoard.get(c).getTeam() == turn));
             if (!currentStillHasLine) {
-                nextTurn = (turn == Team.BLACK) ? Team.WHITE : Team.BLACK;
+                if (turn == Team.BLACK) {
+                    nextTurn = Team.WHITE;
+                }
+                else {
+                    nextTurn = Team.BLACK;
+                }
             }
         }
 

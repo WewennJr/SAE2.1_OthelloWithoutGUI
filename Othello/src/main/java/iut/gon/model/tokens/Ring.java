@@ -10,7 +10,12 @@ public class Ring extends Token {
 
     @Override
     public String charRepr() {
-        return team == Team.BLACK ? "O" : "o";
+        if (team == Team.BLACK) {
+            return "O";
+        }
+        else {
+            return "o";
+        }
     }
 
     @Override

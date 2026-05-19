@@ -18,7 +18,12 @@ public class Pawn extends Token {
 
     @Override
     public String charRepr() {
-        return team == Team.BLACK ? "x" : ".";
+        if (team == Team.BLACK) {
+            return "x";
+        }
+        else {
+            return ".";
+        }
     }
 
     @Override
