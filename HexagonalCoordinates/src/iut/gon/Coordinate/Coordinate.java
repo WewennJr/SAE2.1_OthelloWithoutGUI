@@ -1,6 +1,6 @@
 package iut.gon.Coordinate;
 
-import java.awt.Point;
+
 import java.util.List;
 
 public abstract class Coordinate {
@@ -9,7 +9,7 @@ public abstract class Coordinate {
 	public abstract Coordinate toDir(Mode mode, Direction direction); 
 	
 	public abstract List<Coordinate> getNeighbors(Mode mode);
-	public abstract List<Coordinates> between(Mode mode, Coordinate to);
+	public abstract List<Coordinate> between(Mode mode, Coordinate to);
 	
 	public abstract Coordinate NO (Mode mode);
 	public abstract Coordinate NE (Mode mode);
