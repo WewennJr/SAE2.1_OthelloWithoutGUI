@@ -15,6 +15,7 @@ public class Move {
     }
 
     public void setFrom(Coordinate from) {
+
         this.from = from;
     }
 
@@ -25,4 +26,36 @@ public class Move {
     public void setTo(Coordinate to) {
         this.to = to;
     }
+
+    public void doMove() throws IllegalArgumentException, IndexOutOfBoundsException, RuntimeException
+        if (from.getRing() == null) {
+            throw new IllegalArgumentException("Pas d'anneau à la position de départ");
+        }if (to.getCoordinate() == null){
+            throw new IndeOutOfBoundsException("La coordonné donné est hors terrain");
+        }if (from.getCoordinate() == )
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
