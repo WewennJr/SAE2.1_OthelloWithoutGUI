@@ -1,5 +1,10 @@
 package iut.gon.model.state;
 
+import iut.gon.model.Team;
+import iut.gon.model.actions.Move;
+import iut.gon.model.actions.RemoveLine;
+import iut.gon.model.tokens.Token;
+
 public interface IState {
 
     public IState move(Move move);

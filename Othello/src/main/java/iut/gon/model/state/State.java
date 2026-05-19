@@ -1,6 +1,12 @@
 package iut.gon.model.state;
 
+import iut.gon.model.Team;
+import iut.gon.model.actions.Move;
+import iut.gon.model.actions.RemoveLine;
+import iut.gon.model.tokens.Token;
+
 import java.util.Objects;
+
 
 public class State implements IState {
     private Map<Coordinate, Token> board;
@@ -30,7 +36,7 @@ public class State implements IState {
 
     @Override
     public Map<Coordinate, Token> board() {
-        return null;
+        return board;
     }
 
     @Override
@@ -58,7 +64,7 @@ public class State implements IState {
     }
 
     public Team winner() {
-
+        return null;
     }
 
     @Override
