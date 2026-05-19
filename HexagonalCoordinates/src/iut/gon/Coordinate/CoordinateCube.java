@@ -1,9 +1,9 @@
 package iut.gon.Coordinate;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-
-import java.security.InvalidParameterException;
+import java.util.Objects;
 
 public class CoordinateCube extends Coordinate{
 	private final int q;
@@ -143,4 +143,17 @@ public class CoordinateCube extends Coordinate{
     
     @Override
     public Coordinate O(Mode mode)  { return this.toDir(mode, Direction.O); }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CoordinateCube that = (CoordinateCube) o;
+        return q == that.q && r == that.r && s == that.s;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(q, r, s);
+    }
 }
