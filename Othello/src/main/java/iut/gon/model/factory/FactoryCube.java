@@ -13,11 +13,30 @@ import iut.gon.model.tokens.Token;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Fabrique permettant de créer des états de jeu basés sur une grille en coordonnées cubiques.
+ * <p>
+ * Cette classe construit différents états prédéfinis du jeu (état vide, état de test,
+ * états pour tests de lignes, etc.) en initialisant un plateau hexagonal.
+ * </p>
+ */
 public class FactoryCube implements IFactory {
 
+    /**
+     * Mode de représentation du plateau.
+     */
     private static final Mode MODE = Mode.FLAT;
+
+    /**
+     * Rayon du plateau hexagonal.
+     */
     private static final int RADIUS = 5;
 
+    /**
+     * Construit un plateau vide avec toutes les coordonnées initialisées à null.
+     *
+     * @return une map représentant le plateau vide
+     */
     private Map<Coordinate, Token> buildEmptyBoard() {
         Map<Coordinate, Token> board = new HashMap<>();
         for (int q = -RADIUS; q <= RADIUS; q++) {
@@ -29,6 +48,11 @@ public class FactoryCube implements IFactory {
         return board;
     }
 
+    /**
+     * Crée une map initialisant le nombre d'anneaux retirés pour chaque équipe à zéro.
+     *
+     * @return map des anneaux retirés par équipe
+     */
     private Map<Team, Integer> emptyRemovedRings() {
         Map<Team, Integer> m = new HashMap<>();
         m.put(Team.BLACK, 0);
@@ -36,11 +60,21 @@ public class FactoryCube implements IFactory {
         return m;
     }
 
+    /**
+     * Crée un état vide du jeu.
+     *
+     * @return état initial sans pièces placées
+     */
     @Override
     public IState emptyState() {
         return new State(buildEmptyBoard(), Team.BLACK, emptyRemovedRings(), MODE);
     }
 
+    /**
+     * Crée un état de test avec des pièces placées de manière prédéfinie.
+     *
+     * @return état de test du jeu
+     */
     @Override
     public IState testState() {
         Map<Coordinate, Token> board = buildEmptyBoard();
@@ -69,6 +103,11 @@ public class FactoryCube implements IFactory {
         return new State(board, Team.BLACK, emptyRemovedRings(), MODE);
     }
 
+    /**
+     * Crée un état de test pour vérifier la détection de ligne noire.
+     *
+     * @return état avec une ligne noire complète
+     */
     @Override
     public IState stateForBlackLineTest() {
         Map<Coordinate, Token> board = baseLineBoard();
@@ -82,6 +121,11 @@ public class FactoryCube implements IFactory {
         return new State(board, Team.BLACK, emptyRemovedRings(), MODE);
     }
 
+    /**
+     * Crée un état de test pour vérifier la détection de ligne blanche.
+     *
+     * @return état avec une ligne blanche complète
+     */
     @Override
     public IState stateForWhiteLineTest() {
         Map<Coordinate, Token> board = baseLineBoard();
@@ -95,6 +139,11 @@ public class FactoryCube implements IFactory {
         return new State(board, Team.WHITE, emptyRemovedRings(), MODE);
     }
 
+    /**
+     * Construit un plateau de base avec des anneaux et quelques pions.
+     *
+     * @return plateau initial partiellement rempli
+     */
     private Map<Coordinate, Token> baseLineBoard() {
         Map<Coordinate, Token> board = buildEmptyBoard();
 
@@ -118,6 +167,11 @@ public class FactoryCube implements IFactory {
         return board;
     }
 
+    /**
+     * Crée un état de test avec deux lignes complètes simultanées.
+     *
+     * @return état contenant plusieurs lignes actives
+     */
     @Override
     public IState doubleLineStateTest() {
         Map<Coordinate, Token> board = buildEmptyBoard();

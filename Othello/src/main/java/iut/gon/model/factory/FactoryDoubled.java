@@ -13,10 +13,26 @@ import iut.gon.model.tokens.Token;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Fabrique permettant de créer des états de jeu en coordonnées "doubled".
+ * <p>
+ * Cette classe génère un plateau selon une représentation en grille
+ * avec des coordonnées doublées (offset grid), ainsi que différents
+ * états de test pour le jeu.
+ * </p>
+ */
 public class FactoryDoubled implements IFactory {
 
+    /**
+     * Mode de représentation du plateau.
+     */
     private static final Mode MODE = Mode.FLAT;
 
+    /**
+     * Construit un plateau vide en initialisant toutes les cases valides à null.
+     *
+     * @return une map représentant le plateau vide
+     */
     private Map<Coordinate, Token> buildEmptyBoard() {
         Map<Coordinate, Token> board = new HashMap<>();
 
@@ -40,6 +56,11 @@ public class FactoryDoubled implements IFactory {
         return board;
     }
 
+    /**
+     * Crée une map initialisant le nombre d'anneaux retirés pour chaque équipe à zéro.
+     *
+     * @return map des anneaux retirés par équipe
+     */
     private Map<Team, Integer> emptyRemovedRings() {
         Map<Team, Integer> m = new HashMap<>();
         m.put(Team.BLACK, 0);
@@ -47,11 +68,21 @@ public class FactoryDoubled implements IFactory {
         return m;
     }
 
+    /**
+     * Crée un état vide du jeu.
+     *
+     * @return état initial sans pièces placées
+     */
     @Override
     public IState emptyState() {
         return new State(buildEmptyBoard(), Team.BLACK, emptyRemovedRings(), MODE);
     }
 
+    /**
+     * Crée un état de test avec des pièces placées de manière prédéfinie.
+     *
+     * @return état de test du jeu
+     */
     @Override
     public IState testState() {
         Map<Coordinate, Token> board = buildEmptyBoard();
@@ -80,6 +111,11 @@ public class FactoryDoubled implements IFactory {
         return new State(board, Team.BLACK, emptyRemovedRings(), MODE);
     }
 
+    /**
+     * Crée un état de test pour vérifier la détection de ligne noire.
+     *
+     * @return état avec une ligne noire complète
+     */
     @Override
     public IState stateForBlackLineTest() {
         Map<Coordinate, Token> board = baseLineBoard();
@@ -93,6 +129,11 @@ public class FactoryDoubled implements IFactory {
         return new State(board, Team.BLACK, emptyRemovedRings(), MODE);
     }
 
+    /**
+     * Crée un état de test pour vérifier la détection de ligne blanche.
+     *
+     * @return état avec une ligne blanche complète
+     */
     @Override
     public IState stateForWhiteLineTest() {
         Map<Coordinate, Token> board = baseLineBoard();
@@ -106,6 +147,11 @@ public class FactoryDoubled implements IFactory {
         return new State(board, Team.WHITE, emptyRemovedRings(), MODE);
     }
 
+    /**
+     * Construit un plateau de base avec des pièces initiales.
+     *
+     * @return plateau partiellement rempli
+     */
     private Map<Coordinate, Token> baseLineBoard() {
         Map<Coordinate, Token> board = buildEmptyBoard();
 
@@ -129,6 +175,11 @@ public class FactoryDoubled implements IFactory {
         return board;
     }
 
+    /**
+     * Crée un état de test avec deux lignes complètes simultanées.
+     *
+     * @return état contenant plusieurs lignes actives
+     */
     @Override
     public IState doubleLineStateTest() {
         Map<Coordinate, Token> board = buildEmptyBoard();
