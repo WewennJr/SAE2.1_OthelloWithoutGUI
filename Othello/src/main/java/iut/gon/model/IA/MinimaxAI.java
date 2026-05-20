@@ -11,6 +11,13 @@ import iut.gon.model.tokens.Token;
 
 import java.util.*;
 
+/**
+ * Intelligence artificielle utilisant l'algorithme Minimax avec élagage alpha-bêta.
+ * <p>
+ * Cette IA explore les coups possibles jusqu'à une profondeur donnée et évalue les
+ * positions selon plusieurs heuristiques (anneaux retirés, lignes, mobilité, victoire).
+ * </p>
+ */
 public class MinimaxAI implements AI {
 
     private static final int DEPTH = 3;
@@ -23,11 +30,22 @@ public class MinimaxAI implements AI {
     private final Team aiTeam;
     private final Team humanTeam;
 
+    /**
+     * Crée une IA Minimax pour une équipe donnée.
+     *
+     * @param aiTeam équipe jouée par l'IA
+     */
     public MinimaxAI(Team aiTeam) {
         this.aiTeam = aiTeam;
         this.humanTeam = (aiTeam == Team.BLACK) ? Team.WHITE : Team.BLACK;
     }
 
+    /**
+     * Choisit le meilleur coup possible selon Minimax.
+     *
+     * @param state état actuel du jeu
+     * @return action optimale trouvée
+     */
     @Override
     public Action chooseMove(IState state) {
         int bestScore  = Integer.MIN_VALUE;
@@ -44,6 +62,9 @@ public class MinimaxAI implements AI {
         return bestAction;
     }
 
+    /**
+     * Algorithme Minimax avec élagage alpha-bêta.
+     */
     private int minimax(IState state, int depth, int alpha, int beta, boolean maximizing) {
         if (state.winner() != null || depth == 0) {
             return evaluate(state);
@@ -79,6 +100,12 @@ public class MinimaxAI implements AI {
         }
     }
 
+    /**
+     * Génère tous les états successeurs possibles depuis un état donné.
+     *
+     * @param state état de départ
+     * @return map action → nouvel état
+     */
     private Map<Action, IState> generateSuccessors(IState state) {
         Map<Action, IState> successors = new LinkedHashMap<>();
         Team current = state.turn();
@@ -86,11 +113,9 @@ public class MinimaxAI implements AI {
         List<Set<Coordinate>> lines = state.lines();
 
         if (!lines.isEmpty()) {
-            // Obligation de supprimer une ligne avant tout déplacement
             List<Coordinate> myRings = state.rings().get(current);
 
             for (Set<Coordinate> line : lines) {
-                // On ne traite que les lignes du joueur courant
                 if (!linesBelongsTo(line, current, state)) {
                     continue;
                 }
@@ -101,12 +126,10 @@ public class MinimaxAI implements AI {
                         IState next = state.removeLine(action);
                         successors.put(action, next);
                     } catch (RuntimeException ignored) {
-                        // Combinaison invalide, on passe
                     }
                 }
             }
         } else {
-            // Déplacements d'anneaux normaux
             List<Coordinate> myRings = state.rings().get(current);
 
             for (Coordinate from : myRings) {
@@ -116,7 +139,6 @@ public class MinimaxAI implements AI {
                         IState next = state.move(action);
                         successors.put(action, next);
                     } catch (RuntimeException ignored) {
-                        // Coup invalide, on passe
                     }
                 }
             }
@@ -125,6 +147,9 @@ public class MinimaxAI implements AI {
         return successors;
     }
 
+    /**
+     * Vérifie si une ligne appartient à une équipe donnée.
+     */
     private boolean linesBelongsTo(Set<Coordinate> line, Team team, IState state) {
         for (Coordinate c : line) {
             Token t = state.board().get(c);
@@ -135,6 +160,9 @@ public class MinimaxAI implements AI {
         return true;
     }
 
+    /**
+     * Évalue un état de jeu.
+     */
     private int evaluate(IState state) {
         Team winner = state.winner();
         if (winner == aiTeam) {
@@ -159,11 +187,17 @@ public class MinimaxAI implements AI {
         return ringScore + lineScore + mobilityScore;
     }
 
+    /**
+     * Calcule le nombre d’anneaux retirés pour une équipe.
+     */
     private int countRemovedRings(IState state, Team team) {
         int remaining = state.rings().get(team).size();
         return 5 - remaining;
     }
 
+    /**
+     * Compte les lignes d’une équipe.
+     */
     private int countLinesOf(IState state, Team team) {
         int count = 0;
         for (Set<Coordinate> line : state.lines()) {
@@ -174,6 +208,9 @@ public class MinimaxAI implements AI {
         return count;
     }
 
+    /**
+     * Calcule la mobilité d’une équipe.
+     */
     private int countMobility(IState state, Team team) {
         int total = 0;
         for (Coordinate ring : state.rings().get(team)) {
