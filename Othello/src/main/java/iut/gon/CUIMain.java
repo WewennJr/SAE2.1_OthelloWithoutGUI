@@ -17,10 +17,6 @@ import java.util.*;
 
 public class CUIMain {
 
-    // -----------------------------------------------------------------------
-    // Affichage du terrain
-    // -----------------------------------------------------------------------
-
 
     private static void printBoard(Model model) {
         Map<Coordinate, Token> board = model.getBoard();
