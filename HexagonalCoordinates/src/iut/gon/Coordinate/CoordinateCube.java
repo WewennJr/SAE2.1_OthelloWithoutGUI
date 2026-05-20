@@ -81,42 +81,51 @@ public class CoordinateCube extends Coordinate{
 	}
 
 	@Override
-	public List<Coordinate> between(Mode mode, Coordinate to)throws DifferentAxisException {
-		if (!(to instanceof CoordinateCube target)) {
-			throw new DifferentAxisException("Les deux données ne sont pas compatibles.");
-		}
-		
-		if (this.q != target.getQ() && this.r != target.getR() && this.s != target.getS()) {
-	        throw new DifferentAxisException("Les cases ne sont pas alignées sur le même axe hexagonal.");
+	public List<Coordinate> between(Mode mode, Coordinate to) throws DifferentAxisException {
+
+	    if (!(to instanceof CoordinateCube toCube)) {
+	        throw new DifferentAxisException("'to' doit être une instance de CoordinateCube !");
 	    }
-	    
-	    List<Coordinate> path = new ArrayList<>();
-	    
-	    //Calcul de la distance totale (en nombre de cases)
-	    int dist = Math.max(Math.abs(this.q - target.getQ()), 
-	               Math.max(Math.abs(this.r - target.getR()), 
-	                        Math.abs(this.s - target.getS())));
-	                        
-	    // Si la distance est de 0 (même case) ou 1 (voisin direct), il n'y a rien "entre" eux
-	    if (dist <= 1) {
-	        return path;
+
+	    if (!(this.getQ() == toCube.getQ() || this.getR() == toCube.getR() || this.getS() == toCube.getS())) {
+	        throw new DifferentAxisException("Les cases ne sont pas sur le même axe!");
 	    }
-	    
-	    //On calcule le "pas" de déplacement pour chaque axe (+1, -1 ou 0)
-	    int stepQ = (target.getQ() - this.q) / dist;
-	    int stepR = (target.getR() - this.r) / dist;
-	    int stepS = (target.getS() - this.s) / dist;
-	    
-	    //On génère toutes les cases intermédiaires
-	    for (int i = 1; i < dist; i++) {
-	        path.add(new CoordinateCube(
-	            this.q + (i * stepQ), 
-	            this.r + (i * stepR), 
-	            this.s + (i * stepS)
-	        ));
+
+	    List<Coordinate> listCoordinate = new ArrayList<>();
+
+	    if (this.equals(to)) { return listCoordinate; }
+
+	    int direction = 1;
+
+	    if (this.getQ() == toCube.getQ()) {
+
+	        if( this.getR() > toCube.getR()) { direction = -1; }
+
+	        for(int posR = this.getR() + direction; posR != toCube.getR(); posR += direction) {
+	            listCoordinate.add(new CoordinateCube(this.getQ(), posR, -this.getQ() - posR));
+	        }
 	    }
-	    
-	    return path;
+
+	    else if (this.getR() == toCube.getR()) {
+
+	        if( this.getS() > toCube.getS()) { direction = -1; }
+
+
+	        for(int posS = this.getS() + direction; posS != toCube.getS(); posS += direction) {
+
+	            // q = -r - s
+	            listCoordinate.add(new CoordinateCube(-this.getR() - posS, this.getR(), posS));
+	        }
+	    }
+	    else {
+	        if( this.getQ() > toCube.getQ()) { direction = -1; }
+
+	        for(int posQ = this.getQ() + direction; posQ != toCube.getQ(); posQ += direction) {
+	            listCoordinate.add(new CoordinateCube(posQ, -posQ - this.getS(), this.getS()));
+	        }
+	    }
+
+	    return listCoordinate;
 	}
 	
 	// Les 8 méthodes qui renvoient vers la logique centrale ---
