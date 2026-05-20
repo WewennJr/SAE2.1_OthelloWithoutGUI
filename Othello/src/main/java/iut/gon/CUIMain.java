@@ -22,49 +22,49 @@ public class CUIMain {
         int maxRow = 10;
         int maxCol = 18;
 
-        Token[][] tokenGrid  = new Token[maxRow + 1][maxCol + 1];
-        boolean[][] inField  = new boolean[maxRow + 1][maxCol + 1];
+        Token[][] tokenGrid = new Token[maxRow + 1][maxCol + 1];
         String[][] coordLabel = new String[maxRow + 1][maxCol + 1];
 
+        // On garde TOUTES les cases du plateau fixes
         for (Map.Entry<Coordinate, Token> entry : board.entrySet()) {
             Coordinate coord = entry.getKey();
             Token token = entry.getValue();
+
             Point p = coord.to2DCoordinate();
             int row = p.y();
             int col = p.x();
+
             if (row >= 0 && row <= maxRow && col >= 0 && col <= maxCol) {
-                inField[row][col]    = true;
-                tokenGrid[row][col]  = token;
+                tokenGrid[row][col] = token;
                 coordLabel[row][col] = coordToLabel(coord);
             }
         }
 
         int CELL = 9;
-        int maxCases = 10;
 
         for (int row = 0; row <= maxRow; row++) {
-            int casesInRow = 0;
-            for (int col = 0; col <= maxCol; col++) {
-                if (inField[row][col]) {
-                    casesInRow++;
-                }
-            }
-            int indentChars = ((maxCases - casesInRow) * CELL) / 2;
-            String pad = " ".repeat(indentChars);
 
-            StringBuilder lineA = new StringBuilder(pad);
-            StringBuilder lineB = new StringBuilder(pad);
+            StringBuilder lineA = new StringBuilder();
+            StringBuilder lineB = new StringBuilder();
 
             for (int col = 0; col <= maxCol; col++) {
-                if (!inField[row][col]) {
+
+                // Si cette position ne correspond à aucune case du plateau
+                if (coordLabel[row][col] == null) {
+                    lineA.append(" ".repeat(CELL));
+                    lineB.append(" ".repeat(CELL));
                     continue;
                 }
+
                 Token t = tokenGrid[row][col];
+
+                // Case vide -> "_"
                 String sym = (t == null) ? "_" : t.charRepr();
-                String lbl = coordLabel[row][col];
+
                 lineA.append(center(sym, CELL));
-                lineB.append(center(lbl, CELL));
+                lineB.append(center(coordLabel[row][col], CELL));
             }
+
             System.out.println(lineA);
             System.out.println(lineB);
         }
