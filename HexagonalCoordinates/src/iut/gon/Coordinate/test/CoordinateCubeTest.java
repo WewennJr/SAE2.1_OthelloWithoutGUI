@@ -1,15 +1,18 @@
 package iut.gon.Coordinate.test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.awt.Point;
 import java.security.InvalidParameterException;
 import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
-import iut.gon.Coordinate.Coordinate;
-import iut.gon.Coordinate.CoordinateCube;
-import iut.gon.Coordinate.Mode;
-import iut.gon.Coordinate.Direction;
-import iut.gon.Coordinate.Point;
+import src.iut.gon.Coordinate.Coordinate;
+import src.iut.gon.Coordinate.CoordinateCube;
+import src.iut.gon.Coordinate.DifferentAxisException;
+import src.iut.gon.Coordinate.Direction;
+import src.iut.gon.Coordinate.Mode;
 
 public class CoordinateCubeTest {
 
@@ -75,5 +78,18 @@ public class CoordinateCubeTest {
         for (Coordinate neighbor : neighbors) {
             assertNotNull(neighbor);
         }
+    }
+    
+    @Test
+    void testBetween() throws DifferentAxisException {
+        CoordinateCube depart = new CoordinateCube(0, 0, 0);
+        CoordinateCube arrivee = new CoordinateCube(0, -3, 3); // Déplacement sur l'axe Q constant
+        
+        List<Coordinate> chemin = depart.between(Mode.FLAT, arrivee);
+        
+        // Il y a 2 cases entre (0,0,0) et (0,-3,3)
+        assertEquals(2, chemin.size());
+        // On vérifie la première case du chemin
+        assertTrue(chemin.contains(new CoordinateCube(0, -1, 1)));
     }
 }
