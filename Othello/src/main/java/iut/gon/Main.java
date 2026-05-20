@@ -2,8 +2,17 @@ package iut.gon;
 
 import java.util.Scanner;
 
+/**
+ * Point d'entrée principal du programme.
+ * Permet de choisir entre une partie Joueur vs Joueur ou Joueur vs IA.
+ */
 public class Main {
 
+    /**
+     * Lance le menu principal du jeu et redirige vers le mode choisi.
+     *
+     * @param args arguments de la ligne de commande (non utilisés)
+     */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 

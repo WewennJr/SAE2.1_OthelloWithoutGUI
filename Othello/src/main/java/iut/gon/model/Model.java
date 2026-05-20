@@ -12,20 +12,35 @@ import java.util.Set;
 
 /**
  * Classe façade du modèle : stocke l'état courant et délègue toutes les opérations à IState.
- * Les méthodes qui modifient l'état ne renvoient rien : elles mettent à jour currentState.
+ * <p>
+ * Elle sert d'interface simplifiée entre la logique de jeu et les couches supérieures (IA, UI, contrôleur).
+ * </p>
  */
 public class Model {
 
     private IState currentState;
 
+    /**
+     * Crée un modèle à partir d'un état initial.
+     *
+     * @param currentState état initial du jeu
+     */
     public Model(IState currentState) {
         this.currentState = currentState;
     }
 
+    /**
+     * Retourne l'état actuel du jeu.
+     */
     public IState getCurrentState() {
         return currentState;
     }
 
+    /**
+     * Modifie l'état courant du jeu.
+     *
+     * @param currentState nouvel état
+     */
     public void setCurrentState(IState currentState) {
         this.currentState = currentState;
     }
@@ -45,7 +60,10 @@ public class Model {
     }
 
     /**
-     * Retourne les déplacements possibles depuis {@code from}.
+     * Retourne les déplacements possibles depuis une coordonnée donnée.
+     *
+     * @param from coordonnée de départ
+     * @return ensemble des positions accessibles
      */
     public Set<Coordinate> movesFrom(Coordinate from) {
         return currentState.availableMove(from);
@@ -53,6 +71,8 @@ public class Model {
 
     /**
      * Retourne toutes les lignes de 5 pions présentes sur le plateau.
+     *
+     * @return liste des lignes détectées
      */
     public List<Set<Coordinate>> getPawnsLines() {
         return currentState.lines();
@@ -66,28 +86,40 @@ public class Model {
     }
 
     /**
-     * Retourne le token à la coordonnée donnée, ou null si la case est vide.
+     * Retourne le token présent à une coordonnée donnée.
+     *
+     * @param c coordonnée
+     * @return token ou null si vide
      */
     public Token getTokenAt(Coordinate c) {
         return currentState.board().get(c);
     }
 
     /**
-     * Retourne true si la coordonnée est dans le terrain.
+     * Vérifie si une coordonnée appartient au terrain.
+     *
+     * @param c coordonnée
+     * @return true si la case est valide
      */
     public boolean isInField(Coordinate c) {
         return currentState.isInField(c);
     }
 
     /**
-     * Retourne la liste des coordonnées des anneaux d'une équipe.
+     * Retourne les coordonnées des anneaux d'une équipe.
+     *
+     * @param team équipe concernée
+     * @return liste des positions des anneaux
      */
     public List<Coordinate> getRings(Team team) {
         return currentState.rings().get(team);
     }
 
     /**
-     * Retourne la liste des coordonnées des pions d'une équipe.
+     * Retourne les coordonnées des pions d'une équipe.
+     *
+     * @param team équipe concernée
+     * @return liste des positions des pions
      */
     public List<Coordinate> getPawns(Team team) {
         return currentState.board().entrySet().stream()
@@ -104,7 +136,7 @@ public class Model {
     }
 
     /**
-     * Retourne le gagnant, ou null si la partie n'est pas terminée.
+     * Retourne le gagnant de la partie, ou null si elle n'est pas terminée.
      */
     public Team getWinner() {
         return currentState.winner();
