@@ -159,7 +159,7 @@ public class CUIMain {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println(">-----< Jeu en ligne de commande >-----<");
+        System.out.println(">-----< Player vs Player >-----<");
         System.out.println();
         System.out.println("Règles du jeu :");
         System.out.println("  ▸ Forme des lignes de 5 pions pour gagner des anneaux (3 retirés = victoire).");
