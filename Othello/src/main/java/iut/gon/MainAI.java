@@ -17,8 +17,17 @@ import iut.gon.model.tokens.Token;
 
 import java.util.*;
 
+/**
+ * Point d'entrée principal du jeu en mode joueur contre IA Minimax.
+ * Gère l'affichage, les tours de jeu et l'intégration de l'IA.
+ */
 public class MainAI {
 
+    /**
+     * Affiche le plateau de jeu dans la console sous forme de grille lisible.
+     *
+     * @param model modèle contenant l'état courant du jeu
+     */
     private static void printBoard(Model model) {
         Map<Coordinate, Token> board = model.getBoard();
 
@@ -60,7 +69,7 @@ public class MainAI {
                 if (!inField[row][col]) continue;
                 Token t = tokenGrid[row][col];
                 String sym = (t == null) ? "_" : t.charRepr();
-                // Retrouver la coordonnée pour l'afficher
+
                 String lbl = "";
                 for (Coordinate c : board.keySet()) {
                     Point p2 = c.to2DCoordinate();
@@ -77,6 +86,12 @@ public class MainAI {
         }
     }
 
+    /**
+     * Convertit une coordonnée du jeu en représentation textuelle.
+     *
+     * @param coord coordonnée à convertir
+     * @return chaîne lisible représentant la coordonnée
+     */
     private static String coordToLabel(Coordinate coord) {
         if (coord instanceof iut.gon.Coordinate.CoordinateCube cc) {
             return cc.getQ() + " " + cc.getR() + " " + cc.getS();
@@ -86,6 +101,12 @@ public class MainAI {
         return coord.toString();
     }
 
+    /**
+     * Convertit une collection de coordonnées en chaîne lisible.
+     *
+     * @param coords ensemble de coordonnées
+     * @return représentation textuelle
+     */
     private static String labelList(Collection<Coordinate> coords) {
         StringBuilder sb = new StringBuilder("[");
         boolean first = true;
@@ -100,6 +121,13 @@ public class MainAI {
         return sb.toString();
     }
 
+    /**
+     * Centre une chaîne de caractères dans une largeur donnée.
+     *
+     * @param s chaîne à centrer
+     * @param width largeur totale
+     * @return chaîne centrée
+     */
     private static String center(String s, int width) {
         if (s.length() >= width) {
             return s;
@@ -110,6 +138,11 @@ public class MainAI {
         return " ".repeat(left) + s + " ".repeat(right);
     }
 
+    /**
+     * Crée un état initial aléatoire avec placement de quelques anneaux.
+     *
+     * @return état initial du jeu
+     */
     private static IState createRandomInitialState() {
         FactoryCube factory = new FactoryCube();
         IState empty = factory.emptyState();
@@ -146,6 +179,13 @@ public class MainAI {
         return new State(board, Team.BLACK, removedRings, mode);
     }
 
+    /**
+     * Lit une coordonnée entrée par l'utilisateur dans la console.
+     *
+     * @param sc scanner d'entrée
+     * @param model modèle du jeu
+     * @return coordonnée valide ou null si invalide
+     */
     private static Coordinate readCoordinate(Scanner sc, Model model) {
         System.out.print("  Entrez une coordonnée (q r s) : ");
         try {
@@ -167,6 +207,12 @@ public class MainAI {
         return null;
     }
 
+    /**
+     * Gère le tour d'un joueur humain.
+     *
+     * @param sc scanner
+     * @param model modèle du jeu
+     */
     private static void humanTurn(Scanner sc, Model model) {
         Team turn = model.getTurn();
 
@@ -216,7 +262,6 @@ public class MainAI {
             return;
         }
 
-        // Déplacement d'anneau
         while (true) {
             System.out.println("  Vos anneaux : " + labelList(model.getRings(turn)));
             System.out.println("  Coordonnée de départ (q r s) :");
@@ -246,11 +291,16 @@ public class MainAI {
         }
     }
 
+    /**
+     * Gère le tour de l'IA.
+     *
+     * @param model modèle du jeu
+     * @param ai intelligence artificielle
+     */
     private static void aiTurn(Model model, AI ai) {
         System.out.println("  L'IA réfléchit...");
         IState currentState = model.getCurrentState();
 
-        // L'IA peut avoir plusieurs actions à jouer si des lignes s'enchaînent
         Action action = ai.chooseMove(currentState);
 
         if (action == null) {
@@ -267,7 +317,6 @@ public class MainAI {
             model.removeLine(rl.getLine(), rl.getRing());
         }
 
-        // Supprimer les lignes restantes si nécessaire (l'IA continue)
         List<Set<Coordinate>> remaining = model.getPawnsLines();
         while (!remaining.isEmpty() && model.getWinner() == null) {
             action = ai.chooseMove(model.getCurrentState());
@@ -287,21 +336,15 @@ public class MainAI {
         }
     }
 
+    /**
+     * Programme principal lançant une partie joueur contre IA.
+     *
+     * @param args arguments CLI
+     */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
         System.out.println(">-----< Player vs MinimaxAI >-----<");
-        System.out.println();
-        System.out.println("Règles du jeu :");
-        System.out.println("  ▸ Formez des lignes de 5 pions pour gagner des anneaux (3 retirés = victoire).");
-        System.out.println("  ▸ Les anneaux se déplacent sur les 6 directions hexagonales selon les obstacles.");
-        System.out.println("  ▸ La case de départ devient un pion et les pions survolés changent de couleur.");
-        System.out.println("  ▸ Chaque ligne de 5 pions permet de retirer un anneau et la ligne correspondante.");
-        System.out.println();
-        System.out.println("Légende :   o : Anneau Blanc    . : Pion Blanc");
-        System.out.println("            O : Anneau Noir     x : Pion Noir");
-        System.out.println("            _ : Case vide");
-        System.out.println();
 
         Team humanTeam = null;
         while (humanTeam == null) {
@@ -319,10 +362,7 @@ public class MainAI {
         }
 
         Team aiTeam = (humanTeam == Team.BLACK) ? Team.WHITE : Team.BLACK;
-        System.out.println();
-        System.out.println("  Vous jouez : " + (humanTeam == Team.BLACK ? "NOIR (O/x)" : "BLANC (o/.)"));
-        System.out.println("  L'IA joue  : " + (aiTeam    == Team.BLACK ? "NOIR (O/x)" : "BLANC (o/.)"));
-        System.out.println();
+
         System.out.println("Appuyez sur Entrée pour commencer ...");
         sc.nextLine();
 
@@ -332,30 +372,15 @@ public class MainAI {
 
         while (model.getWinner() == null) {
             printBoard(model);
-            System.out.println();
 
-            Team turn = model.getTurn();
-
-            if (turn == humanTeam) {
-                System.out.println(">>> Votre tour (" + (humanTeam == Team.BLACK ? "NOIR" : "BLANC") + ")");
+            if (model.getTurn() == humanTeam) {
                 humanTurn(sc, model);
             } else {
-                System.out.println(">>> Tour de l'IA (" + (aiTeam == Team.BLACK ? "NOIR" : "BLANC") + ")");
                 aiTurn(model, ai);
             }
-
-            System.out.println();
         }
 
         printBoard(model);
-        System.out.println();
         System.out.println(">-----< PARTIE TERMINÉE >-----<");
-        Team winner = model.getWinner();
-        String winnerLabel = (winner == Team.BLACK ? "NOIR" : "BLANC");
-        if (winner == humanTeam) {
-            System.out.println("Félicitations, vous avez gagné ! (" + winnerLabel + ")");
-        } else {
-            System.out.println("L'IA a gagné. (" + winnerLabel + ") Bonne chance la prochaine fois !");
-        }
     }
 }
