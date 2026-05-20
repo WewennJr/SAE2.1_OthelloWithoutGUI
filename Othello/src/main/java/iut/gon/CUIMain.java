@@ -14,8 +14,20 @@ import iut.gon.model.tokens.Token;
 
 import java.util.*;
 
+/**
+ * Point d'entrée en ligne de commande du jeu.
+ * <p>
+ * Permet de jouer une partie en mode console (Player vs Player),
+ * d'afficher le plateau et de gérer les interactions utilisateur.
+ * </p>
+ */
 public class CUIMain {
 
+    /**
+     * Affiche le plateau de jeu dans la console.
+     *
+     * @param model modèle contenant l'état actuel du jeu
+     */
     private static void printBoard(Model model) {
         Map<Coordinate, Token> board = model.getBoard();
 
@@ -25,7 +37,6 @@ public class CUIMain {
         Token[][] tokenGrid = new Token[maxRow + 1][maxCol + 1];
         String[][] coordLabel = new String[maxRow + 1][maxCol + 1];
 
-        // On garde TOUTES les cases du plateau fixes
         for (Map.Entry<Coordinate, Token> entry : board.entrySet()) {
             Coordinate coord = entry.getKey();
             Token token = entry.getValue();
@@ -49,7 +60,6 @@ public class CUIMain {
 
             for (int col = 0; col <= maxCol; col++) {
 
-                // Si cette position ne correspond à aucune case du plateau
                 if (coordLabel[row][col] == null) {
                     lineA.append(" ".repeat(CELL));
                     lineB.append(" ".repeat(CELL));
@@ -57,8 +67,6 @@ public class CUIMain {
                 }
 
                 Token t = tokenGrid[row][col];
-
-                // Case vide -> "_"
                 String sym = (t == null) ? "_" : t.charRepr();
 
                 lineA.append(center(sym, CELL));
@@ -70,6 +78,12 @@ public class CUIMain {
         }
     }
 
+    /**
+     * Convertit une coordonnée en étiquette lisible.
+     *
+     * @param coord coordonnée du jeu
+     * @return représentation texte
+     */
     private static String coordToLabel(Coordinate coord) {
         if (coord instanceof iut.gon.Coordinate.CoordinateCube cc) {
             return cc.getQ() + " " + cc.getR() + " " + cc.getS();
@@ -79,6 +93,12 @@ public class CUIMain {
         return coord.toString();
     }
 
+    /**
+     * Transforme une collection de coordonnées en chaîne lisible.
+     *
+     * @param coords collection de coordonnées
+     * @return chaîne formatée
+     */
     private static String labelList(java.util.Collection<Coordinate> coords) {
         StringBuilder sb = new StringBuilder("[");
         boolean first = true;
@@ -93,6 +113,13 @@ public class CUIMain {
         return sb.toString();
     }
 
+    /**
+     * Centre une chaîne dans un espace donné.
+     *
+     * @param s chaîne
+     * @param width largeur
+     * @return chaîne centrée
+     */
     private static String center(String s, int width) {
         if (s.length() >= width) {
             return s;
@@ -103,6 +130,11 @@ public class CUIMain {
         return " ".repeat(left) + s + " ".repeat(right);
     }
 
+    /**
+     * Crée un état initial aléatoire pour une partie.
+     *
+     * @return état initial
+     */
     private static IState createRandomInitialState() {
         FactoryCube factory = new FactoryCube();
         IState empty = factory.emptyState();
@@ -111,7 +143,6 @@ public class CUIMain {
         removedRings.put(Team.BLACK, 0);
         removedRings.put(Team.WHITE, 0);
 
-        // Liste des cases vides
         List<Coordinate> emptyCells = new ArrayList<>();
         for (Map.Entry<Coordinate, Token> e : board.entrySet()) {
             if (e.getValue() == null) {
@@ -122,7 +153,6 @@ public class CUIMain {
         Random rng = new Random();
         Collections.shuffle(emptyCells, rng);
 
-        // Placer 5 anneaux blancs puis 5 noirs
         int placed = 0;
         for (Coordinate c : emptyCells) {
             if (placed < 5) {
@@ -135,11 +165,17 @@ public class CUIMain {
             placed++;
         }
 
-        // État vide
         iut.gon.Coordinate.Mode mode = ((State) empty).getMode();
         return new State(board, Team.BLACK, removedRings, mode);
     }
 
+    /**
+     * Lit une coordonnée entrée par l'utilisateur.
+     *
+     * @param sc scanner d'entrée
+     * @param model modèle du jeu
+     * @return coordonnée valide ou null
+     */
     private static Coordinate readCoordinate(Scanner sc, Model model) {
         System.out.print("  Entrez une coordonnée (q r s) : ");
         try {
@@ -149,7 +185,7 @@ public class CUIMain {
                 int q = Integer.parseInt(parts[0]);
                 int r = Integer.parseInt(parts[1]);
                 int s = Integer.parseInt(parts[2]);
-                // Chercher dans le board la bonne coordonnée
+
                 for (Coordinate c : model.getBoard().keySet()) {
                     if (c.toString().equals("(" + q + "," + r + "," + s + ")")) {
                         return c;
@@ -159,6 +195,7 @@ public class CUIMain {
                         return cc;
                     }
                 }
+
                 iut.gon.Coordinate.CoordinateCube cc = new iut.gon.Coordinate.CoordinateCube(q, r, s);
                 if (model.isInField(cc)) {
                     return cc;
@@ -171,6 +208,11 @@ public class CUIMain {
         return null;
     }
 
+    /**
+     * Lance une partie en mode console.
+     *
+     * @param args arguments ligne de commande
+     */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -212,33 +254,29 @@ public class CUIMain {
                 int idx = -1;
                 try {
                     idx = Integer.parseInt(sc.nextLine().trim());
-                } catch (Exception ignored) {
-                    // ignore
-                }
+                } catch (Exception ignored) {}
+
                 if (idx < 0 || idx >= lines.size()) {
                     System.out.println("Indice invalide.");
                     continue;
                 }
+
                 Set<Coordinate> chosenLine = lines.get(idx);
 
                 System.out.println("Choisissez un anneau à retirer (coordonnées q r s) :");
                 List<Coordinate> myRings = model.getRings(turn);
                 System.out.println("  Vos anneaux : " + labelList(myRings));
+
                 Coordinate ringCoord = readCoordinate(sc, model);
-                if (ringCoord == null) {
-                    continue;
-                }
+                if (ringCoord == null) continue;
 
                 try {
                     model.removeLine(chosenLine, ringCoord);
-                    System.out.println("Ligne et anneau supprimés.");
                 } catch (Exception e) {
                     System.out.println("Erreur : " + e.getMessage());
                 }
 
-                if (model.getWinner() != null) {
-                    break;
-                }
+                if (model.getWinner() != null) break;
                 lines = model.getPawnsLines();
                 printBoard(model);
             }
@@ -247,22 +285,21 @@ public class CUIMain {
 
             System.out.println("Vos anneaux : " + labelList(model.getRings(turn)));
             System.out.println("Coordonnée de départ (q r s) :");
+
             Coordinate from = readCoordinate(sc, model);
-            if (from == null) {
-                continue;
-            }
+            if (from == null) continue;
 
             Set<Coordinate> moves = model.movesFrom(from);
             if (moves.isEmpty()) {
                 System.out.println("Aucun mouvement possible depuis cette case.");
                 continue;
             }
+
             System.out.println("Destinations possibles : " + labelList(moves));
             System.out.println("Coordonnée de destination (q r s) :");
+
             Coordinate to = readCoordinate(sc, model);
-            if (to == null) {
-                continue;
-            }
+            if (to == null) continue;
 
             try {
                 model.moveRing(from, to);
