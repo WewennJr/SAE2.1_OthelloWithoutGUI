@@ -26,52 +26,47 @@ public class MainAI {
         int maxCol = 18;
 
         Token[][] tokenGrid = new Token[maxRow + 1][maxCol + 1];
-        boolean[][] inField = new boolean[maxRow + 1][maxCol + 1];
+        String[][] labelGrid = new String[maxRow + 1][maxCol + 1];
 
+        // Remplissage direct du plateau
         for (Map.Entry<Coordinate, Token> entry : board.entrySet()) {
             Coordinate coord = entry.getKey();
             Token token = entry.getValue();
+
             Point p = coord.to2DCoordinate();
             int row = p.y();
             int col = p.x();
+
             if (row >= 0 && row <= maxRow && col >= 0 && col <= maxCol) {
-                inField[row][col]   = true;
                 tokenGrid[row][col] = token;
+                labelGrid[row][col] = coordToLabel(coord);
             }
         }
 
         int CELL = 9;
-        int maxCases = 10;
 
         for (int row = 0; row <= maxRow; row++) {
-            int casesInRow = 0;
+
+            StringBuilder lineA = new StringBuilder();
+            StringBuilder lineB = new StringBuilder();
+
             for (int col = 0; col <= maxCol; col++) {
-                if (inField[row][col]) {
-                    casesInRow++;
+
+                // case inexistante dans le plateau → espace fixe
+                if (labelGrid[row][col] == null) {
+                    lineA.append(" ".repeat(CELL));
+                    lineB.append(" ".repeat(CELL));
+                    continue;
                 }
-            }
-            int indentChars = ((maxCases - casesInRow) * CELL) / 2;
-            String pad = " ".repeat(indentChars);
 
-            StringBuilder lineA = new StringBuilder(pad);
-            StringBuilder lineB = new StringBuilder(pad);
-
-            for (int col = 0; col <= maxCol; col++) {
-                if (!inField[row][col]) continue;
                 Token t = tokenGrid[row][col];
+
                 String sym = (t == null) ? "_" : t.charRepr();
-                // Retrouver la coordonnée pour l'afficher
-                String lbl = "";
-                for (Coordinate c : board.keySet()) {
-                    Point p2 = c.to2DCoordinate();
-                    if (p2.y() == row && p2.x() == col) {
-                        lbl = coordToLabel(c);
-                        break;
-                    }
-                }
+
                 lineA.append(center(sym, CELL));
-                lineB.append(center(lbl, CELL));
+                lineB.append(center(labelGrid[row][col], CELL));
             }
+
             System.out.println(lineA);
             System.out.println(lineB);
         }
