@@ -4,7 +4,7 @@ import iut.gon.Coordinate.Coordinate;
 import iut.gon.Coordinate.Point;
 import iut.gon.model.Model;
 import iut.gon.model.Team;
-import iut.gon.model.IA.IA;
+import iut.gon.model.IA.AI;
 import iut.gon.model.IA.MinimaxAI;
 import iut.gon.model.actions.Action;
 import iut.gon.model.actions.Move;
@@ -12,7 +12,6 @@ import iut.gon.model.actions.RemoveLine;
 import iut.gon.model.factory.FactoryCube;
 import iut.gon.model.state.IState;
 import iut.gon.model.state.State;
-import iut.gon.model.tokens.Pawn;
 import iut.gon.model.tokens.Ring;
 import iut.gon.model.tokens.Token;
 
@@ -214,7 +213,7 @@ public class MainAI {
         }
     }
 
-    private static void aiTurn(Model model, IA ai) {
+    private static void aiTurn(Model model, AI ai) {
         System.out.println("  L'IA réfléchit...");
         IState currentState = model.getCurrentState();
 
@@ -272,7 +271,6 @@ public class MainAI {
         System.out.println("            _ : Case vide");
         System.out.println();
 
-        // Choix de l'équipe du joueur
         Team humanTeam = null;
         while (humanTeam == null) {
             System.out.print("Voulez-vous jouer avec les NOIRS ou les BLANCS ? (n/b) : ");
@@ -291,10 +289,9 @@ public class MainAI {
         sc.nextLine();
 
         IState initial = createRandomInitialState();
-        Model model    = new Model(initial);
-        IA    ai       = new MinimaxAI(aiTeam);
+        Model model = new Model(initial);
+        AI ai = new MinimaxAI(aiTeam);
 
-        // ---- Boucle de jeu ----
         while (model.getWinner() == null) {
             printBoard(model);
             System.out.println();
@@ -312,7 +309,6 @@ public class MainAI {
             System.out.println();
         }
 
-        // ---- Fin de partie ----
         printBoard(model);
         System.out.println();
         System.out.println(">-----< PARTIE TERMINÉE >-----<");

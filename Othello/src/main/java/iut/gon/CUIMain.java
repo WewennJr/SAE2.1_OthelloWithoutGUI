@@ -179,14 +179,12 @@ public class CUIMain {
         IState initial = createRandomInitialState();
         Model model = new Model(initial);
 
-        // Boucle de jeu
         while (model.getWinner() == null) {
             printBoard(model);
             System.out.println();
             Team turn = model.getTurn();
             System.out.println("Tour : " + (turn == Team.BLACK ? "NOIR (O/x)" : "BLANC (o/.)"));
 
-            // --- Gestion des lignes à supprimer ---
             List<Set<Coordinate>> lines = model.getPawnsLines();
             while (!lines.isEmpty()) {
                 System.out.println("Une ligne de 5 pions doit être supprimée !");
@@ -195,7 +193,6 @@ public class CUIMain {
                     System.out.println("  [" + i + "] " + labelList(lines.get(i)));
                 }
 
-                // Choisir une ligne
                 System.out.print("Choisissez une ligne (indice) : ");
                 int idx = -1;
                 try { idx = Integer.parseInt(sc.nextLine().trim()); } catch (Exception ignored) {}
@@ -205,7 +202,6 @@ public class CUIMain {
                 }
                 Set<Coordinate> chosenLine = lines.get(idx);
 
-                // Choisir un anneau à retirer
                 System.out.println("Choisissez un anneau à retirer (coordonnées q r s) :");
                 List<Coordinate> myRings = model.getRings(turn);
                 System.out.println("  Vos anneaux : " + labelList(myRings));
@@ -226,7 +222,6 @@ public class CUIMain {
 
             if (model.getWinner() != null) break;
 
-            // --- Déplacement d'anneau ---
             System.out.println("Vos anneaux : " + labelList(model.getRings(turn)));
             System.out.println("Coordonnée de départ (q r s) :");
             Coordinate from = readCoordinate(sc, model);
@@ -251,7 +246,6 @@ public class CUIMain {
             System.out.println();
         }
 
-        // Fin de partie
         printBoard(model);
         System.out.println();
         System.out.println(">-----< PARTIE TERMINÉE >-----<");
