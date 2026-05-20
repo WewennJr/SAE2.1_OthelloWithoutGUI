@@ -92,4 +92,4 @@ public class CoordinateCubeTest {
         // On vérifie la première case du chemin
         assertTrue(chemin.contains(new CoordinateCube(0, -1, 1)));
     }
-}
+}//ça fonctionne ? 

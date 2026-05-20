@@ -34,5 +34,5 @@ public class PointTest {
         assertNotEquals(p1, p3);
         
         assertEquals(p1.hashCode(), p2.hashCode());
-    }
+    }//ça fonctionne ?
 }

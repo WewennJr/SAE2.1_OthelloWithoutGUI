@@ -98,5 +98,5 @@ public class CoordinateDoubledTest {
     @Override
     public int hashCode() {
         return java.util.Objects.hash(y, x);
-    }
+    }//ça fonctionne ? 
 }
