@@ -18,7 +18,9 @@ public class Main {
             System.out.print("Votre choix (1/2) : ");
             try {
                 choice = Integer.parseInt(sc.nextLine().trim());
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                // ignore
+            }
             if (choice != 1 && choice != 2) System.out.println("  Répondez 1 ou 2.");
         }
 

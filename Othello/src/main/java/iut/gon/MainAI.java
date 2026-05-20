@@ -25,8 +25,8 @@ public class MainAI {
         int maxRow = 10;
         int maxCol = 18;
 
-        Token[][]   tokenGrid  = new Token[maxRow + 1][maxCol + 1];
-        boolean[][] inField    = new boolean[maxRow + 1][maxCol + 1];
+        Token[][] tokenGrid = new Token[maxRow + 1][maxCol + 1];
+        boolean[][] inField = new boolean[maxRow + 1][maxCol + 1];
 
         for (Map.Entry<Coordinate, Token> entry : board.entrySet()) {
             Coordinate coord = entry.getKey();
@@ -40,17 +40,21 @@ public class MainAI {
             }
         }
 
-        int CELL     = 9;
+        int CELL = 9;
         int maxCases = 10;
 
         for (int row = 0; row <= maxRow; row++) {
             int casesInRow = 0;
-            for (int col = 0; col <= maxCol; col++) if (inField[row][col]) casesInRow++;
+            for (int col = 0; col <= maxCol; col++) {
+                if (inField[row][col]) {
+                    casesInRow++;
+                }
+            }
             int indentChars = ((maxCases - casesInRow) * CELL) / 2;
             String pad = " ".repeat(indentChars);
 
-            StringBuilder lineA = new StringBuilder(pad); // symboles
-            StringBuilder lineB = new StringBuilder(pad); // coordonnées
+            StringBuilder lineA = new StringBuilder(pad);
+            StringBuilder lineB = new StringBuilder(pad);
 
             for (int col = 0; col <= maxCol; col++) {
                 if (!inField[row][col]) continue;
@@ -86,7 +90,9 @@ public class MainAI {
         StringBuilder sb = new StringBuilder("[");
         boolean first = true;
         for (Coordinate c : coords) {
-            if (!first) sb.append(" ; ");
+            if (!first) {
+                sb.append(" ; ");
+            }
             sb.append(coordToLabel(c));
             first = false;
         }
@@ -97,7 +103,7 @@ public class MainAI {
     private static String center(String s, int width) {
         if (s.length() >= width) return s;
         int total = width - s.length();
-        int left  = total / 2;
+        int left = total / 2;
         int right = total - left;
         return " ".repeat(left) + s + " ".repeat(right);
     }
@@ -120,9 +126,15 @@ public class MainAI {
 
         int placed = 0;
         for (Coordinate c : emptyCells) {
-            if (placed < 5)       board.put(c, new Ring(Team.WHITE));
-            else if (placed < 10) board.put(c, new Ring(Team.BLACK));
-            else break;
+            if (placed < 5) {
+                board.put(c, new Ring(Team.WHITE));
+            }
+            else if (placed < 10) {
+                board.put(c, new Ring(Team.BLACK));
+            }
+            else {
+                break;
+            }
             placed++;
         }
 
@@ -140,9 +152,13 @@ public class MainAI {
                 int r = Integer.parseInt(parts[1]);
                 int s = Integer.parseInt(parts[2]);
                 iut.gon.Coordinate.CoordinateCube cc = new iut.gon.Coordinate.CoordinateCube(q, r, s);
-                if (model.isInField(cc)) return cc;
+                if (model.isInField(cc)) {
+                    return cc;
+                }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            // ignore
+        }
         System.out.println("  Coordonnée invalide.");
         return null;
     }
@@ -150,7 +166,6 @@ public class MainAI {
     private static void humanTurn(Scanner sc, Model model) {
         Team turn = model.getTurn();
 
-        // Suppression de ligne éventuelle
         List<Set<Coordinate>> lines = model.getPawnsLines();
         while (!lines.isEmpty()) {
             System.out.println("  Une ligne de 5 pions doit être supprimée !");
@@ -161,7 +176,11 @@ public class MainAI {
 
             System.out.print("  Choisissez une ligne (indice) : ");
             int idx = -1;
-            try { idx = Integer.parseInt(sc.nextLine().trim()); } catch (Exception ignored) {}
+            try {
+                idx = Integer.parseInt(sc.nextLine().trim());
+            } catch (Exception ignored) {
+                // gnore
+            }
             if (idx < 0 || idx >= lines.size()) {
                 System.out.println("  Indice invalide, réessayez.");
                 continue;
@@ -170,7 +189,9 @@ public class MainAI {
 
             System.out.println("  Vos anneaux : " + labelList(model.getRings(turn)));
             Coordinate ringCoord = readCoordinate(sc, model);
-            if (ringCoord == null) continue;
+            if (ringCoord == null) {
+                continue;
+            }
 
             try {
                 model.removeLine(chosenLine, ringCoord);
@@ -180,19 +201,25 @@ public class MainAI {
                 continue;
             }
 
-            if (model.getWinner() != null) return;
+            if (model.getWinner() != null) {
+                return;
+            }
             lines = model.getPawnsLines();
             printBoard(model);
         }
 
-        if (model.getWinner() != null) return;
+        if (model.getWinner() != null) {
+            return;
+        }
 
         // Déplacement d'anneau
         while (true) {
             System.out.println("  Vos anneaux : " + labelList(model.getRings(turn)));
             System.out.println("  Coordonnée de départ (q r s) :");
             Coordinate from = readCoordinate(sc, model);
-            if (from == null) continue;
+            if (from == null) {
+                continue;
+            }
 
             Set<Coordinate> moves = model.movesFrom(from);
             if (moves.isEmpty()) {
@@ -202,7 +229,9 @@ public class MainAI {
             System.out.println("  Destinations possibles : " + labelList(moves));
             System.out.println("  Coordonnée de destination (q r s) :");
             Coordinate to = readCoordinate(sc, model);
-            if (to == null) continue;
+            if (to == null) {
+                continue;
+            }
 
             try {
                 model.moveRing(from, to);
@@ -275,9 +304,15 @@ public class MainAI {
         while (humanTeam == null) {
             System.out.print("Voulez-vous jouer avec les NOIRS ou les BLANCS ? (n/b) : ");
             String choice = sc.nextLine().trim().toLowerCase();
-            if (choice.equals("n"))      humanTeam = Team.BLACK;
-            else if (choice.equals("b")) humanTeam = Team.WHITE;
-            else System.out.println("  Répondez 'n' pour Noir ou 'b' pour Blanc.");
+            if (choice.equals("n")) {
+                humanTeam = Team.BLACK;
+            }
+            else if (choice.equals("b")) {
+                humanTeam = Team.WHITE;
+            }
+            else {
+                System.out.println("  Répondez 'n' pour Noir ou 'b' pour Blanc.");
+            }
         }
 
         Team aiTeam = (humanTeam == Team.BLACK) ? Team.WHITE : Team.BLACK;

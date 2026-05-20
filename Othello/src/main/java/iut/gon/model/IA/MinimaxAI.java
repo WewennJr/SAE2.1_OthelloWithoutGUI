@@ -45,7 +45,6 @@ public class MinimaxAI implements AI {
     }
 
     private int minimax(IState state, int depth, int alpha, int beta, boolean maximizing) {
-        // Cas terminal : victoire détectée ou profondeur max atteinte
         if (state.winner() != null || depth == 0) {
             return evaluate(state);
         }
@@ -124,7 +123,6 @@ public class MinimaxAI implements AI {
         return successors;
     }
 
-    /** Vérifie que tous les pions d'une ligne appartiennent à l'équipe donnée. */
     private boolean linesBelongsTo(Set<Coordinate> line, Team team, IState state) {
         for (Coordinate c : line) {
             Token t = state.board().get(c);
@@ -136,7 +134,6 @@ public class MinimaxAI implements AI {
     }
 
     private int evaluate(IState state) {
-        // Victoire / défaite : score extrême
         Team winner = state.winner();
         if (winner == aiTeam) {
             return  WIN_SCORE;
@@ -145,17 +142,14 @@ public class MinimaxAI implements AI {
             return -WIN_SCORE;
         }
 
-        // Anneaux retirés : chaque anneau retiré compte pour 1000
         int aiRings = countRemovedRings(state, aiTeam);
         int oppRings = countRemovedRings(state, humanTeam);
         int ringScore = (aiRings - oppRings) * RING_SCORE;
 
-        // Lignes de 5 complètes présentes sur le plateau (menace immédiate)
         int aiLines = countLinesOf(state, aiTeam);
         int oppLines = countLinesOf(state, humanTeam);
         int lineScore = (aiLines - oppLines) * LINE4_SCORE;
 
-        // Mobilité : nombre total de destinations disponibles pour les anneaux
         int aiMobility = countMobility(state, aiTeam);
         int oppMobility = countMobility(state, humanTeam);
         int mobilityScore = (int) ((aiMobility - oppMobility) * MOBILITY_W);
@@ -164,7 +158,6 @@ public class MinimaxAI implements AI {
     }
 
     private int countRemovedRings(IState state, Team team) {
-        // On déduit les anneaux retirés en comparant : 5 anneaux au départ, X restants
         int remaining = state.rings().get(team).size();
         return 5 - remaining;
     }
@@ -172,7 +165,9 @@ public class MinimaxAI implements AI {
     private int countLinesOf(IState state, Team team) {
         int count = 0;
         for (Set<Coordinate> line : state.lines()) {
-            if (linesBelongsTo(line, team, state)) count++;
+            if (linesBelongsTo(line, team, state)) {
+                count++;
+            }
         }
         return count;
     }

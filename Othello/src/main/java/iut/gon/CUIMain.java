@@ -35,26 +35,30 @@ public class CUIMain {
             if (row >= 0 && row <= maxRow && col >= 0 && col <= maxCol) {
                 inField[row][col]    = true;
                 tokenGrid[row][col]  = token;
-                // Extraire q,r,s par réflexion (CoordinateCube peut ne pas surcharger toString)
                 coordLabel[row][col] = coordToLabel(coord);
             }
         }
 
-        // Largeur par case : assez large pour "−5,1,4" (6 chars) + marges
         int CELL = 9;
-        int maxCases = 10; // rangée la plus large (row 4 et 6)
+        int maxCases = 10;
 
         for (int row = 0; row <= maxRow; row++) {
             int casesInRow = 0;
-            for (int col = 0; col <= maxCol; col++) if (inField[row][col]) casesInRow++;
+            for (int col = 0; col <= maxCol; col++) {
+                if (inField[row][col]) {
+                    casesInRow++;
+                }
+            }
             int indentChars = ((maxCases - casesInRow) * CELL) / 2;
             String pad = " ".repeat(indentChars);
 
-            StringBuilder lineA = new StringBuilder(pad); // symboles
-            StringBuilder lineB = new StringBuilder(pad); // coordonnées
+            StringBuilder lineA = new StringBuilder(pad);
+            StringBuilder lineB = new StringBuilder(pad);
 
             for (int col = 0; col <= maxCol; col++) {
-                if (!inField[row][col]) continue;
+                if (!inField[row][col]) {
+                    continue;
+                }
                 Token t = tokenGrid[row][col];
                 String sym = (t == null) ? "_" : t.charRepr();
                 String lbl = coordLabel[row][col];
@@ -79,7 +83,9 @@ public class CUIMain {
         StringBuilder sb = new StringBuilder("[");
         boolean first = true;
         for (Coordinate c : coords) {
-            if (!first) sb.append(" ; ");
+            if (!first) {
+                sb.append(" ; ");
+            }
             sb.append(coordToLabel(c));
             first = false;
         }
@@ -88,9 +94,11 @@ public class CUIMain {
     }
 
     private static String center(String s, int width) {
-        if (s.length() >= width) return s;
+        if (s.length() >= width) {
+            return s;
+        }
         int total = width - s.length();
-        int left  = total / 2;
+        int left = total / 2;
         int right = total - left;
         return " ".repeat(left) + s + " ".repeat(right);
     }
@@ -103,7 +111,7 @@ public class CUIMain {
         removedRings.put(Team.BLACK, 0);
         removedRings.put(Team.WHITE, 0);
 
-        // Liste des cases vides (null)
+        // Liste des cases vides
         List<Coordinate> emptyCells = new ArrayList<>();
         for (Map.Entry<Coordinate, Token> e : board.entrySet()) {
             if (e.getValue() == null) emptyCells.add(e.getKey());
@@ -112,7 +120,7 @@ public class CUIMain {
         Random rng = new Random();
         Collections.shuffle(emptyCells, rng);
 
-        // Placer 5 anneaux blancs puis 5 anneaux noirs
+        // Placer 5 anneaux blancs puis 5 noirs
         int placed = 0;
         for (Coordinate c : emptyCells) {
             if (placed < 5) {
@@ -125,7 +133,7 @@ public class CUIMain {
             placed++;
         }
 
-        // Récupérer le mode depuis l'état vide
+        // État vide
         iut.gon.Coordinate.Mode mode = ((State) empty).getMode();
         return new State(board, Team.BLACK, removedRings, mode);
     }
@@ -139,15 +147,20 @@ public class CUIMain {
                 int q = Integer.parseInt(parts[0]);
                 int r = Integer.parseInt(parts[1]);
                 int s = Integer.parseInt(parts[2]);
-                // Chercher dans le board la coordonnée correspondante
+                // Chercher dans le board la bonne coordonnée
                 for (Coordinate c : model.getBoard().keySet()) {
-                    if (c.toString().equals("(" + q + "," + r + "," + s + ")")) return c;
-                    // Fallback : CoordinateCube directement
+                    if (c.toString().equals("(" + q + "," + r + "," + s + ")")) {
+                        return c;
+                    }
                     iut.gon.Coordinate.CoordinateCube cc = new iut.gon.Coordinate.CoordinateCube(q, r, s);
-                    if (model.isInField(cc)) return cc;
+                    if (model.isInField(cc)) {
+                        return cc;
+                    }
                 }
                 iut.gon.Coordinate.CoordinateCube cc = new iut.gon.Coordinate.CoordinateCube(q, r, s);
-                if (model.isInField(cc)) return cc;
+                if (model.isInField(cc)) {
+                    return cc;
+                }
             }
         } catch (Exception e) {
             // ignore
