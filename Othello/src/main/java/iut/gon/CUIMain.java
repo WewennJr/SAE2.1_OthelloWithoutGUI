@@ -159,9 +159,22 @@ public class CUIMain {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("=== YINSH - Interface en ligne de commande ===");
-        System.out.println("Légende : o=anneau blanc  O=anneau noir  _=vide  .=pion blanc  x=pion noir");
+        System.out.println(">-----< Jeu en ligne de commande >-----<");
         System.out.println();
+        System.out.println("Règles du jeu :");
+        System.out.println("  ▸ Forme des lignes de 5 pions pour gagner des anneaux (3 retirés = victoire).");
+        System.out.println("  ▸ Les anneaux se déplacent sur les 6 directions hexagonales selon les obstacles.");
+        System.out.println("  ▸ La case de départ devient un pion et les pions survolés changent de couleur.");
+        System.out.println("  ▸ Chaque ligne de 5 pions permet de retirer un anneau et la ligne correspondante.");
+        System.out.println();
+        System.out.println("Légende :   o : Anneau Blanc    . : Pion Blanc");
+        System.out.println("            O : Anneau Noir     x : Pion Noir");
+        System.out.println("            _ : Case vide");
+        System.out.println();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Appuyez sur Entrée pour commencer ...");
+        scanner.nextLine();
 
         IState initial = createRandomInitialState();
         Model model = new Model(initial);
@@ -241,7 +254,7 @@ public class CUIMain {
         // Fin de partie
         printBoard(model);
         System.out.println();
-        System.out.println("=== PARTIE TERMINÉE ===");
+        System.out.println(">-----< PARTIE TERMINÉE >-----<");
         Team winner = model.getWinner();
         System.out.println("Gagnant : " + (winner == Team.BLACK ? "NOIR" : "BLANC") + " !");
     }
