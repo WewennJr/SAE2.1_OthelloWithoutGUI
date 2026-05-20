@@ -91,7 +91,9 @@ public class MinimaxAI implements AI {
 
             for (Set<Coordinate> line : lines) {
                 // On ne traite que les lignes du joueur courant
-                if (!linesBelongsTo(line, current, state)) continue;
+                if (!linesBelongsTo(line, current, state)) {
+                    continue;
+                }
 
                 for (Coordinate ring : myRings) {
                     try {

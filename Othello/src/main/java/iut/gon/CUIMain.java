@@ -114,7 +114,9 @@ public class CUIMain {
         // Liste des cases vides
         List<Coordinate> emptyCells = new ArrayList<>();
         for (Map.Entry<Coordinate, Token> e : board.entrySet()) {
-            if (e.getValue() == null) emptyCells.add(e.getKey());
+            if (e.getValue() == null) {
+                emptyCells.add(e.getKey());
+            }
         }
 
         Random rng = new Random();
@@ -208,7 +210,11 @@ public class CUIMain {
 
                 System.out.print("Choisissez une ligne (indice) : ");
                 int idx = -1;
-                try { idx = Integer.parseInt(sc.nextLine().trim()); } catch (Exception ignored) {}
+                try {
+                    idx = Integer.parseInt(sc.nextLine().trim());
+                } catch (Exception ignored) {
+                    // ignore
+                }
                 if (idx < 0 || idx >= lines.size()) {
                     System.out.println("Indice invalide.");
                     continue;
@@ -219,7 +225,9 @@ public class CUIMain {
                 List<Coordinate> myRings = model.getRings(turn);
                 System.out.println("  Vos anneaux : " + labelList(myRings));
                 Coordinate ringCoord = readCoordinate(sc, model);
-                if (ringCoord == null) continue;
+                if (ringCoord == null) {
+                    continue;
+                }
 
                 try {
                     model.removeLine(chosenLine, ringCoord);
@@ -228,7 +236,9 @@ public class CUIMain {
                     System.out.println("Erreur : " + e.getMessage());
                 }
 
-                if (model.getWinner() != null) break;
+                if (model.getWinner() != null) {
+                    break;
+                }
                 lines = model.getPawnsLines();
                 printBoard(model);
             }
@@ -238,7 +248,9 @@ public class CUIMain {
             System.out.println("Vos anneaux : " + labelList(model.getRings(turn)));
             System.out.println("Coordonnée de départ (q r s) :");
             Coordinate from = readCoordinate(sc, model);
-            if (from == null) continue;
+            if (from == null) {
+                continue;
+            }
 
             Set<Coordinate> moves = model.movesFrom(from);
             if (moves.isEmpty()) {
@@ -248,7 +260,9 @@ public class CUIMain {
             System.out.println("Destinations possibles : " + labelList(moves));
             System.out.println("Coordonnée de destination (q r s) :");
             Coordinate to = readCoordinate(sc, model);
-            if (to == null) continue;
+            if (to == null) {
+                continue;
+            }
 
             try {
                 model.moveRing(from, to);

@@ -101,7 +101,9 @@ public class MainAI {
     }
 
     private static String center(String s, int width) {
-        if (s.length() >= width) return s;
+        if (s.length() >= width) {
+            return s;
+        }
         int total = width - s.length();
         int left = total / 2;
         int right = total - left;
@@ -118,7 +120,9 @@ public class MainAI {
 
         List<Coordinate> emptyCells = new ArrayList<>();
         for (Map.Entry<Coordinate, Token> e : board.entrySet()) {
-            if (e.getValue() == null) emptyCells.add(e.getKey());
+            if (e.getValue() == null) {
+                emptyCells.add(e.getKey());
+            }
         }
 
         Random rng = new Random();
@@ -255,8 +259,7 @@ public class MainAI {
         }
 
         if (action instanceof Move move) {
-            System.out.println("  L'IA déplace un anneau : "
-                    + coordToLabel(move.getFrom()) + "  →  " + coordToLabel(move.getTo()));
+            System.out.println("  L'IA déplace un anneau : " + coordToLabel(move.getFrom()) + "  →  " + coordToLabel(move.getTo()));
             model.moveRing(move.getFrom(), move.getTo());
         } else if (action instanceof RemoveLine rl) {
             System.out.println("  L'IA supprime une ligne : " + labelList(rl.getLine()));

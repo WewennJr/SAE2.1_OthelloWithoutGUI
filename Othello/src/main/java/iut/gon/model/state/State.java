@@ -40,12 +40,10 @@ public class State implements IState {
         Coordinate from = move.getFrom();
         Coordinate to   = move.getTo();
 
-        // Lever RuntimeException s'il y a une ligne à supprimer
         if (!lines().isEmpty()) {
             throw new RuntimeException("Une ligne doit être supprimée avant de jouer.");
         }
 
-        // Lever IndexOutOfBoundsException si une coordonnée est hors terrain
         if (!isInField(from)) {
             throw new IndexOutOfBoundsException("Coordonnée de départ hors du terrain : " + from);
         }
@@ -53,25 +51,20 @@ public class State implements IState {
             throw new IndexOutOfBoundsException("Coordonnée d'arrivée hors du terrain : " + to);
         }
 
-        // Lever IllegalArgumentException si pas d'anneau du joueur courant en 'from'
         Token tokenAt = board.get(from);
         if (!(tokenAt instanceof Ring) || tokenAt.getTeam() != turn) {
             throw new IllegalArgumentException("Pas d'anneau du joueur courant en " + from);
         }
 
-        // Lever IllegalArgumentException si la destination n'est pas atteignable
         Set<Coordinate> reachable = availableMove(from);
         if (!reachable.contains(to)) {
             throw new IllegalArgumentException("La case " + to + " n'est pas atteignable depuis " + from);
         }
 
-        // Construction du nouveau plateau
         Map<Coordinate, Token> newBoard = new HashMap<>(board);
 
-        // 1. Retirer l'anneau de sa position de départ
         newBoard.remove(from);
 
-        // 2. Retourner tous les pions survolés entre from et to
         List<Coordinate> between = new ArrayList<>();
         try {
             between = from.between(mode, to);
@@ -86,13 +79,10 @@ public class State implements IState {
             }
         }
 
-        // 3. Placer un pion de la couleur de l'anneau à l'ancienne position
         newBoard.put(from, new Pawn(turn));
 
-        // 4. Placer l'anneau à sa nouvelle position
         newBoard.put(to, new Ring(turn));
 
-        // Déterminer le prochain tour
         List<Set<Coordinate>> newLines = getPawnsLines(newBoard);
         Team nextTurn = turn;
         if (newLines.isEmpty()) {
@@ -111,27 +101,23 @@ public class State implements IState {
 
     @Override
     public IState removeLine(RemoveLine removeLine) {
-        Set<Coordinate> line     = removeLine.getLine();
-        Coordinate      ringCoord = removeLine.getRing();
+        Set<Coordinate> line = removeLine.getLine();
+        Coordinate ringCoord = removeLine.getRing();
 
-        // Lever RuntimeException si aucune ligne n'est présente
         List<Set<Coordinate>> currentLines = lines();
         if (currentLines.isEmpty()) {
             throw new RuntimeException("Aucune ligne à supprimer sur le plateau.");
         }
 
-        // Valider la ligne : exactement 5 cases
         if (line.size() != LINE_LENGTH) {
             throw new RuntimeException("La ligne doit contenir exactement 5 cases, reçu : " + line.size());
         }
 
-        // Valider que la ligne existe sur le plateau
         boolean lineExists = currentLines.stream().anyMatch(l -> l.equals(line));
         if (!lineExists) {
             throw new RuntimeException("La ligne fournie n'existe pas sur le plateau.");
         }
 
-        // Valider que tous les pions sont de la même équipe
         Team lineTeam = null;
         for (Coordinate c : line) {
             Token t = board.get(c);
@@ -145,28 +131,22 @@ public class State implements IState {
             }
         }
 
-        // Valider que l'anneau à retirer appartient au joueur courant
         Token ringToken = board.get(ringCoord);
         if (!(ringToken instanceof Ring) || ringToken.getTeam() != turn) {
             throw new RuntimeException("La coordonnée de l'anneau ne contient pas un anneau du joueur courant.");
         }
 
-        // Construction du nouveau plateau
         Map<Coordinate, Token> newBoard = new HashMap<>(board);
 
-        // Supprimer les 5 pions de la ligne
         for (Coordinate c : line) {
             newBoard.remove(c);
         }
 
-        // Supprimer l'anneau choisi (la case redevient vide = null dans la map)
         newBoard.put(ringCoord, null);
 
-        // Mettre à jour le compteur d'anneaux retirés
         Map<Team, Integer> newRemovedRings = new HashMap<>(removedRings);
         newRemovedRings.put(turn, newRemovedRings.getOrDefault(turn, 0) + 1);
 
-        // Vérifier s'il reste des lignes à supprimer
         List<Set<Coordinate>> remainingLines = getPawnsLines(newBoard);
         Team nextTurn = turn;
         if (remainingLines.isEmpty()) {
@@ -190,7 +170,6 @@ public class State implements IState {
             return result;
         }
 
-        // Les 6 directions valides selon le mode
         Direction[] directions = getDirections();
 
         for (Direction dir : directions) {
@@ -201,16 +180,12 @@ public class State implements IState {
                 Token tokenHere = board.get(current);
 
                 if (tokenHere instanceof Ring) {
-                    // Un anneau bloque : on s'arrête
                     break;
                 } else if (tokenHere instanceof Pawn) {
-                    // On peut sauter par-dessus des pions
                     jumpedOverPawn = true;
                     current = current.toDir(mode, dir);
                 } else {
-                    // Case vide
                     if (jumpedOverPawn) {
-                        // Après avoir sauté des pions, on DOIT s'arrêter à la première case vide
                         result.add(current);
                         break;
                     } else {
@@ -224,9 +199,6 @@ public class State implements IState {
         return result;
     }
 
-    /**
-     * Retourne les 6 directions valides pour le mode courant.
-     */
     private Direction[] getDirections() {
         if (mode == Mode.FLAT) {
             return new Direction[]{Direction.N, Direction.S, Direction.NE, Direction.NO, Direction.SE, Direction.SO};
@@ -374,10 +346,8 @@ public class State implements IState {
         Token existing = newBoard.get(c);
 
         if (existing != null && existing.getClass().equals(tokenClass) && existing.getTeam() == team) {
-            // Même classe et même équipe : on supprime
             newBoard.put(c, null);
         } else {
-            // Sinon on crée dynamiquement une instance via réflexion
             try {
                 Constructor<?>[] constructors = tokenClass.getConstructors();
                 Constructor<?> constructor = constructors[0];
@@ -406,11 +376,11 @@ public class State implements IState {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         State state = (State) o;
-        return Objects.equals(board, state.board)
-                && Objects.equals(turn, state.turn)
-                && Objects.equals(removedRings, state.removedRings);
+        return Objects.equals(board, state.board) && Objects.equals(turn, state.turn) && Objects.equals(removedRings, state.removedRings);
     }
 
     @Override
