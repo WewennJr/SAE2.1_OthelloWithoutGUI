@@ -14,9 +14,7 @@ import iut.gon.model.tokens.Token;
 
 import java.util.*;
 
-
 public class CUIMain {
-
 
     private static void printBoard(Model model) {
         Map<Coordinate, Token> board = model.getBoard();
@@ -68,23 +66,20 @@ public class CUIMain {
         }
     }
 
-
-
     private static String coordToLabel(Coordinate coord) {
         if (coord instanceof iut.gon.Coordinate.CoordinateCube cc) {
-            return cc.getQ() + "," + cc.getR() + "," + cc.getS();
+            return cc.getQ() + " " + cc.getR() + " " + cc.getS();
         } else if (coord instanceof CoordinateDoubled cd) {
-            return cd.getY() + "," + cd.getX();
+            return cd.getY() + " " + cd.getX();
         }
         return coord.toString();
     }
-
 
     private static String labelList(java.util.Collection<Coordinate> coords) {
         StringBuilder sb = new StringBuilder("[");
         boolean first = true;
         for (Coordinate c : coords) {
-            if (!first) sb.append(", ");
+            if (!first) sb.append(" ; ");
             sb.append(coordToLabel(c));
             first = false;
         }
@@ -99,9 +94,6 @@ public class CUIMain {
         int right = total - left;
         return " ".repeat(left) + s + " ".repeat(right);
     }
-
-
-
 
     private static IState createRandomInitialState() {
         FactoryCube factory = new FactoryCube();
@@ -138,7 +130,6 @@ public class CUIMain {
         return new State(board, Team.BLACK, removedRings, mode);
     }
 
-
     private static Coordinate readCoordinate(Scanner sc, Model model) {
         System.out.print("  Entrez une coordonnée (q r s) : ");
         try {
@@ -168,7 +159,7 @@ public class CUIMain {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("=== Interface en ligne de commande ===");
+        System.out.println("=== YINSH - Interface en ligne de commande ===");
         System.out.println("Légende : o=anneau blanc  O=anneau noir  _=vide  .=pion blanc  x=pion noir");
         System.out.println();
 
@@ -188,7 +179,7 @@ public class CUIMain {
                 System.out.println("Une ligne de 5 pions doit être supprimée !");
                 System.out.println("Lignes disponibles :");
                 for (int i = 0; i < lines.size(); i++) {
-                    System.out.println("  [" + i + "] " + lines.get(i));
+                    System.out.println("  [" + i + "] " + labelList(lines.get(i)));
                 }
 
                 // Choisir une ligne
@@ -223,7 +214,7 @@ public class CUIMain {
             if (model.getWinner() != null) break;
 
             // --- Déplacement d'anneau ---
-            System.out.println("Déplacez un anneau. Vos anneaux : " + labelList(model.getRings(turn)));
+            System.out.println("Vos anneaux : " + labelList(model.getRings(turn)));
             System.out.println("Coordonnée de départ (q r s) :");
             Coordinate from = readCoordinate(sc, model);
             if (from == null) continue;
