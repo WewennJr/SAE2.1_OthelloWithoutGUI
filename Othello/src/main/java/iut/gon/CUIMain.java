@@ -14,28 +14,14 @@ import iut.gon.model.tokens.Token;
 
 import java.util.*;
 
-/**
- * Interface en ligne de commande pour jouer à YINSH.
- *
- * Représentation du terrain :
- *   o = anneau blanc
- *   O = anneau noir
- *   _ = case vide
- *   . = pion blanc
- *   x = pion noir
- *
- * Les coordonnées sont saisies au format "q,r" (CoordinateCube) ou "row,col" (CoordinateDoubled).
- */
+
 public class CUIMain {
 
     // -----------------------------------------------------------------------
     // Affichage du terrain
     // -----------------------------------------------------------------------
 
-    /**
-     * Convertit l'état courant en tableau 2D de caractères via les coordonnées Doubled,
-     * puis l'affiche.
-     */
+
     private static void printBoard(Model model) {
         Map<Coordinate, Token> board = model.getBoard();
 
@@ -87,9 +73,7 @@ public class CUIMain {
     }
 
 
-    /**
-     * Extrait les coordonnées lisibles d'une Coordinate.
-     */
+
     private static String coordToLabel(Coordinate coord) {
         if (coord instanceof iut.gon.Coordinate.CoordinateCube cc) {
             return cc.getQ() + "," + cc.getR() + "," + cc.getS();
@@ -120,13 +104,9 @@ public class CUIMain {
         return " ".repeat(left) + s + " ".repeat(right);
     }
 
-    // -----------------------------------------------------------------------
-    // Initialisation aléatoire
-    // -----------------------------------------------------------------------
 
-    /**
-     * Crée un état initial avec 5 anneaux par équipe placés aléatoirement sur des cases vides.
-     */
+
+
     private static IState createRandomInitialState() {
         FactoryCube factory = new FactoryCube();
         IState empty = factory.emptyState();
@@ -162,14 +142,7 @@ public class CUIMain {
         return new State(board, Team.BLACK, removedRings, mode);
     }
 
-    // -----------------------------------------------------------------------
-    // Parsing des coordonnées
-    // -----------------------------------------------------------------------
 
-    /**
-     * Lit une coordonnée depuis stdin au format "q r s" ou "row col".
-     * Retourne null si l'entrée est invalide.
-     */
     private static Coordinate readCoordinate(Scanner sc, Model model) {
         System.out.print("  Entrez une coordonnée (q r s) : ");
         try {
@@ -195,10 +168,6 @@ public class CUIMain {
         System.out.println("  Coordonnée invalide.");
         return null;
     }
-
-    // -----------------------------------------------------------------------
-    // Boucle principale
-    // -----------------------------------------------------------------------
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
