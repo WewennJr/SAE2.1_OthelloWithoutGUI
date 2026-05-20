@@ -17,6 +17,7 @@ import java.util.*;
 /**
  * Représentation immuable d'une situation de jeu.
  * Chaque méthode qui modifie l'état renvoie un NOUVEAU State, sans modifier le courant.
+ * Cette classe contient la logique principale du jeu (déplacements, lignes, victoire, etc.).
  */
 public class State implements IState {
 
@@ -28,6 +29,14 @@ public class State implements IState {
     private final Map<Team, Integer> removedRings;
     private final Mode mode;
 
+    /**
+     * Construit un nouvel état de jeu.
+     *
+     * @param board plateau de jeu
+     * @param turn joueur dont c'est le tour
+     * @param removedRings nombre d'anneaux retirés par équipe
+     * @param mode mode de représentation du plateau
+     */
     public State(Map<Coordinate, Token> board, Team turn, Map<Team, Integer> removedRings, Mode mode) {
         this.board = Collections.unmodifiableMap(new HashMap<>(board));
         this.turn = turn;
@@ -35,6 +44,9 @@ public class State implements IState {
         this.mode = mode;
     }
 
+    /**
+     * Déplace un anneau et retourne le nouvel état.
+     */
     @Override
     public IState move(Move move) {
         Coordinate from = move.getFrom();
@@ -88,7 +100,6 @@ public class State implements IState {
         if (newLines.isEmpty()) {
             nextTurn = (turn == Team.BLACK) ? Team.WHITE : Team.BLACK;
         } else {
-            // Priorité à l'équipe courante si elle a une ligne
             boolean currentHasLine = newLines.stream().anyMatch(line ->
                     line.stream().anyMatch(c -> newBoard.get(c) != null && newBoard.get(c).getTeam() == turn));
             if (!currentHasLine) {
@@ -99,6 +110,9 @@ public class State implements IState {
         return new State(newBoard, nextTurn, removedRings, mode);
     }
 
+    /**
+     * Supprime une ligne de 5 pions et un anneau.
+     */
     @Override
     public IState removeLine(RemoveLine removeLine) {
         Set<Coordinate> line = removeLine.getLine();
@@ -162,6 +176,9 @@ public class State implements IState {
         return new State(newBoard, nextTurn, newRemovedRings, mode);
     }
 
+    /**
+     * Retourne les déplacements possibles d'un anneau.
+     */
     @Override
     public Set<Coordinate> availableMove(Coordinate from) {
         Set<Coordinate> result = new HashSet<>();
@@ -199,6 +216,9 @@ public class State implements IState {
         return result;
     }
 
+    /**
+     * Retourne les directions possibles selon le mode.
+     */
     private Direction[] getDirections() {
         if (mode == Mode.FLAT) {
             return new Direction[]{Direction.N, Direction.S, Direction.NE, Direction.NO, Direction.SE, Direction.SO};
@@ -247,11 +267,7 @@ public class State implements IState {
     }
 
     /**
-     * Détecte toutes les lignes de 5 pions consécutifs dans le board fourni.
-     * Une ligne de 6 pions génère deux HashSet de 5 éléments.
-     * Les axes dépendent du mode :
-     *   FLAT  → N/S, NE/SO, NO/SE
-     *   POINTY → E/O, NE/SO, NO/SE
+     * Détecte toutes les lignes de 5 pions dans le plateau.
      */
     @Override
     public List<Set<Coordinate>> getPawnsLines(Map<Coordinate, Token> board) {
@@ -260,22 +276,21 @@ public class State implements IState {
         Direction[][] axes;
         if (mode == Mode.FLAT) {
             axes = new Direction[][]{
-                    {Direction.N,  Direction.S},
+                    {Direction.N, Direction.S},
                     {Direction.NE, Direction.SO},
                     {Direction.NO, Direction.SE}
             };
         } else {
             axes = new Direction[][]{
-                    {Direction.E,  Direction.O},
+                    {Direction.E, Direction.O},
                     {Direction.NE, Direction.SO},
                     {Direction.NO, Direction.SE}
             };
         }
 
         for (Map.Entry<Coordinate, Token> entry : board.entrySet()) {
-            if (!(entry.getValue() instanceof Pawn)) {
-                continue;
-            }
+            if (!(entry.getValue() instanceof Pawn)) continue;
+
             Coordinate start = entry.getKey();
 
             for (Direction[] axis : axes) {
@@ -284,8 +299,8 @@ public class State implements IState {
                 if (sequence.size() >= LINE_LENGTH) {
                     for (int i = 0; i <= sequence.size() - LINE_LENGTH; i++) {
                         Set<Coordinate> line = new HashSet<>(sequence.subList(i, i + LINE_LENGTH));
-                        // Vérifier que tous les pions sont de la même équipe
                         Team lineTeam = board.get(sequence.get(i)).getTeam();
+
                         boolean sameTeam = true;
                         for (Coordinate c : line) {
                             Token t = board.get(c);
@@ -306,24 +321,21 @@ public class State implements IState {
     }
 
     /**
-     * Construit la séquence de coordonnées alignées contenant des pions,
-     * en partant de {@code center} et en explorant dans les deux directions de l'axe.
+     * Construit une séquence de pions alignés.
      */
     private List<Coordinate> buildSequence(Map<Coordinate, Token> board, Coordinate center,
                                            Direction dir1, Direction dir2) {
-        // Reculer jusqu'au bout de la séquence continue (dans dir2)
         Coordinate cursor = center;
         while (cursor != null && isInField(cursor) && board.get(cursor) instanceof Pawn) {
             cursor = cursor.toDir(mode, dir2);
         }
-        // cursor est maintenant hors de la séquence côté dir2 ; on revient d'une case
+
         if (cursor == null) {
             cursor = center;
         } else {
             cursor = cursor.toDir(mode, dir1);
         }
 
-        // Avancer vers dir1 et collecter les pions consécutifs
         List<Coordinate> sequence = new ArrayList<>();
         while (cursor != null && isInField(cursor) && board.get(cursor) instanceof Pawn) {
             sequence.add(cursor);
@@ -376,11 +388,11 @@ public class State implements IState {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
         State state = (State) o;
-        return Objects.equals(board, state.board) && Objects.equals(turn, state.turn) && Objects.equals(removedRings, state.removedRings);
+        return Objects.equals(board, state.board)
+                && Objects.equals(turn, state.turn)
+                && Objects.equals(removedRings, state.removedRings);
     }
 
     @Override
