@@ -1,0 +1,18 @@
+# Maven
+target/
+**/target/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Logs / runtime
+*.log
+
+# OS
+.DS_Store
+
+# Optional (si tu as des fichiers temporaires Java)
+*.class
