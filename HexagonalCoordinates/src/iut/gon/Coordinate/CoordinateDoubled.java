@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CoordinateDoubled extends Coordinate{
-	private int x;
-	private int y;
+	public int x;
+	public int y;
 	public CoordinateDoubled(int y, int x ) {
 		this.x = x;
 		this.y = y;
@@ -20,6 +20,14 @@ public class CoordinateDoubled extends Coordinate{
 	@Override
 	public Point to2DCoordinate() {
 		return new Point(this.x, this.y);
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
 	}
 
 	@Override
