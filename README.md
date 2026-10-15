@@ -59,75 +59,75 @@ Projet réalisé dans le cadre de la SAE 2.1 & 2.2 du BUT Informatique à l'Univ
 HexagonalCoordinates/
 ├── pom.xml
 ├── .gitignore
-├── src/
-│   └── main/
-│       └── java/
-│           └── iut/
-│               └── gon/
-│                   └── Coordinate/
-│                       ├── Coordinate.java
-│                       ├── CoordinateCube.java
-│                       ├── CoordinateDoubled.java
-│                       ├── DifferentAxisException.java
-│                       ├── Direction.java
-│                       ├── Mode.java
-│                       └── Point.java
-│
-└── Othello/
-    ├── pom.xml
-    ├── .gitignore
-    └── src/
-        ├── main/
-        │   └── java/
-        │       └── iut/
-        │           └── gon/
-        │               ├── Main.java
-        │               ├── MainAI.java
-        │               ├── CUIMain.java
-        │               ├── Model.java
-        │               ├── Team.java
-        │               └── model/
-        │                   ├── actions/
-        │                   │   ├── Action.java
-        │                   │   ├── Move.java
-        │                   │   └── RemoveLine.java
-        │                   ├── state/
-        │                   │   ├── IState.java
-        │                   │   └── State.java
-        │                   ├── tokens/
-        │                   │   ├── Token.java
-        │                   │   ├── Pawn.java
-        │                   │   └── Ring.java
-        │                   ├── IA/
-        │                   │   ├── AI.java
-        │                   │   ├── MinimaxAI.java
-        │                   │   └── Node.java
-        │                   └── factory/
-        │                       ├── Factory.java
-        │                       ├── FactoryCube.java
-        │                       └── FactoryDoubled.java
-        │
-        └── test/
-            └── java/
-                └── iut/
-                    └── gon/
-                        ├── actions/
-                        │   ├── MoveTest.java
-                        │   └── RemoveLineTest.java
-                        ├── state/
-                        │   └── StateTest.java
-                        ├── tokens/
-                        │   ├── PawnTest.java
-                        │   └── RingTest.java
-                        ├── IA/
-                        │   ├── MinimaxAITest.java
-                        │   └── NodeTest.java
-                        ├── test/
-                        │   ├── CoordinateCubeTest.java
-                        │   ├── CoordinateDoubledTest.java
-                        │   └── CoordinateTest.java
-                        └── factory/
-                            └── FactoryTest.java
+└── src/
+    └── main/
+        └── java/
+            └── iut/
+                └── gon/
+                    └── Coordinate/
+                        ├── Coordinate.java
+                        ├── CoordinateCube.java
+                        ├── CoordinateDoubled.java
+                        ├── DifferentAxisException.java
+                        ├── Direction.java
+                        ├── Mode.java
+                        └── Point.java
+
+Othello/
+├── pom.xml
+├── .gitignore
+└── src/
+    ├── main/
+    │   └── java/
+    │       └── iut/
+    │           └── gon/
+    │               ├── Main.java
+    │               ├── MainAI.java
+    │               ├── CUIMain.java
+    │               ├── Model.java
+    │               ├── Team.java
+    │               └── model/
+    │                   ├── actions/
+    │                   │   ├── Action.java
+    │                   │   ├── Move.java
+    │                   │   └── RemoveLine.java
+    │                   ├── state/
+    │                   │   ├── IState.java
+    │                   │   └── State.java
+    │                   ├── tokens/
+    │                   │   ├── Token.java
+    │                   │   ├── Pawn.java
+    │                   │   └── Ring.java
+    │                   ├── IA/
+    │                   │   ├── AI.java
+    │                   │   ├── MinimaxAI.java
+    │                   │   └── Node.java
+    │                   └── factory/
+    │                       ├── Factory.java
+    │                       ├── FactoryCube.java
+    │                       └── FactoryDoubled.java
+    │
+    └── test/
+        └── java/
+            └── iut/
+                └── gon/
+                    ├── actions/
+                    │   ├── MoveTest.java
+                    │   └── RemoveLineTest.java
+                    ├── state/
+                    │   └── StateTest.java
+                    ├── tokens/
+                    │   ├── PawnTest.java
+                    │   └── RingTest.java
+                    ├── IA/
+                    │   ├── MinimaxAITest.java
+                    │   └── NodeTest.java
+                    ├── test/
+                    │   ├── CoordinateCubeTest.java
+                    │   ├── CoordinateDoubledTest.java
+                    │   └── CoordinateTest.java
+                    └── factory/
+                        └── FactoryTest.java
 
 # Architecture du projet
 
