@@ -183,13 +183,17 @@ Module indépendant permettant de gérer :
 
 > Cloner le projet
 
-git clone https://redmine-etu.unicaen.fr/git/groupe13-le-fh-ba-gw
+```cmd
+git clone https://github.com/WewennJr/SAE2.1_OthelloSansInterface.git
+```
 
 # Compilation
 
 > Avec Maven :
 
+```cmd
 mvn clean install
+```
 
 # Lancer le projet
 
