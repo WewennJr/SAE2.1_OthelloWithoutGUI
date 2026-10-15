@@ -56,6 +56,7 @@ Projet réalisé dans le cadre de la SAE 2.1 & 2.2 du BUT Informatique à l'Univ
 
 # Structure du projet
 
+```text
 HexagonalCoordinates/
 ├── pom.xml
 ├── .gitignore
@@ -128,6 +129,7 @@ Othello/
                     │   └── CoordinateTest.java
                     └── factory/
                         └── FactoryTest.java
+```
 
 # Architecture du projet
 
